@@ -48,7 +48,8 @@ if (download == TRUE) {
 ### main plotting function
 
 error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0) {
-	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", sep="")
+	#if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", sep="")
+	if (tpos!='ALL') title = paste("Pre-draft - ",tpos," Tiers", sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
@@ -157,7 +158,7 @@ draw.tiers("all", 141, 200, 5, adjust=17, XLOW=30)
 draw.tiers("qb", 1, 32, 9)
 draw.tiers("rb", 1, 40, 10)
 draw.tiers("wr", 1, 60, 10)
-draw.tiers("te", 1, 24, 8)
+draw.tiers("te", 1, 24, 7)
 draw.tiers("flex", 15, 75, 13)
 draw.tiers("k", 1, 29, 5)
 draw.tiers("dst", 1, 32, 6)
