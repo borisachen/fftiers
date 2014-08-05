@@ -4,7 +4,7 @@ require('ggplot2')
 ### Parameters 
 
 thisweek = 0
-download = FALSE		# Do we want to download fresh data from fantasypros?
+download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
 ### Set and create input / output directories
@@ -148,7 +148,7 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0) {
 }
 
 ## If there are any injured players, list them here to remove them
-injured <- c()
+injured <- c('David Wilson')
 
 
 draw.tiers("all", 1, 70, 10, XLOW=5)
