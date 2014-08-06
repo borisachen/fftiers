@@ -19,8 +19,8 @@ outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(o
 pos.list = c('qb','rb','wr','te','flex','k','dst')
 
 # Can also download PPR, half PPR, and rest-of-season data
-            # 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
-            # 'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex',
+             'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 			# 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
@@ -37,10 +37,15 @@ if (download == TRUE) {
   
   # overall rankings download:
   overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-raw.xls'
+  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-ppr-raw.xls'
   system(overall.url); Sys.sleep(0.5)
+  system(ppr.url); Sys.sleep(0.5)
   sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-raw.xls', 
   			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all', '.tsv',sep="")
+  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
   system(sedstr);
+  system(sedstr2);
   
 }
 
@@ -64,6 +69,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	
 	# Print out names
 	fileConn<-file(paste(outputdir,"text_",tpos,".txt",sep=""))
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) fileConn<-file(paste(outputdir,"text_",tpos,'-adjust', adjust,".txt",sep=""))
 	tier.list = array("", k)
 	for (i in 1:k) {
       foo <- this.pos[this.pos $cluster==i,]
@@ -78,9 +84,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	this.pos$Tier 	= factor(this.pos$mcluster)
 	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
 
-	bigfont			= c("QB","TE","K","DST", "PPR - TE", "ROS - TE", "0.5 PPR - TE", "ROS - QB")
-	smfont			= c("RB", "PPR - RB", "ROS - RB", "0.5 PPR - RB")
-	tinyfont		= c("WR","Flex", "PPR - WR", "ROS - WR","PPR - Flex", "0.5 PPR - WR","0.5 PPR - Flex", 'ALL')
+	bigfont			= c("QB","TE","K","DST", "PPR-TE", "ROS-TE", "0.5 PPR-TE", "ROS-QB")
+	smfont			= c("RB", "PPR-RB", "ROS-RB", "0.5 PPR-RB")
+	tinyfont		= c("WR","Flex", "PPR-WR", "ROS-WR","PPR-Flex", "0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR')
 	
 	if (tpos %in% bigfont) {font = 3.5; barsize=1.5;  dotsize=2;   }
 	if (tpos %in% smfont)  {font = 3;   barsize=1.25; dotsize=1.5; }
@@ -101,7 +107,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Ave.Rank - nchar/5 - Std.Dev/1.5), size=font) 
 	if (tpos %in% tinyfont)     			
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Ave.Rank - nchar/3 - Std.Dev/1.8), size=font) 
-    if (tpos == 'ALL')     			
+    if ((tpos == 'ALL') | (tpos == 'ALL-PPR'))
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Ave.Rank - nchar/3 - Std.Dev/1.8), size=font) + geom_text(aes(label=Position, y = Ave.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') 
     p = p + scale_x_continuous("Weight Adjusted Expert Concensus Rank")
     p = p + ylab("Average Expert Rank")
@@ -111,9 +117,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     maxy = max( abs(this.pos$Ave.Rank)+this.pos$Std.Dev/2) 
 	if (tpos!='Flex') p = p + ylim(-4, maxy)
     if (tpos=="Flex") p = p + ylim(4, maxy)
-	if (tpos=='ALL') p = p + ylim(low-XLOW, maxy+5)
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) p = p + ylim(low-XLOW, maxy+5)
 	outfile = paste(outputdir, "week-", thisweek, "-", tpos, ".png", sep="")
-	if (tpos=='ALL') outfile = paste(outputdir, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) outfile = paste(outputdir, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
 	
 	if (useold == TRUE) {
 		this.pos$position.rank = -this.pos$position.rank 
@@ -165,22 +171,11 @@ draw.tiers("dst", 1, 32, 6)
 
 
 # PPR
+draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
+draw.tiers("all-ppr", 71, 140, 8, adjust=10, XLOW=16)
+draw.tiers("all-ppr", 141, 200, 5, adjust=17, XLOW=30)
+draw.tiers("ppr-rb", 1, 40, 10)
+draw.tiers("ppr-wr", 1, 60, 10)
+draw.tiers("ppr-te", 1, 24, 6)
 
-dat = read.delim(paste(datdir, "week_",thisweek,"_ppr-rb.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 40, k=7, tpos="PPR - RB", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_ppr-wr.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 60, k=8, tpos="PPR - WR", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_ppr-te.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 30, k=5, tpos="PPR - TE", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_ppr-flex.tsv",sep=""), sep="\t")
-error.bar.plot(low = 15, high = 75, k=11, tpos="PPR - Flex", dat=dat)
-
-dat = read.delim(paste(datdir, "week_",thisweek,"_half-point-ppr-rb.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 40, k=6, tpos="0.5 PPR - RB", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_half-point-ppr-wr.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 60, k=8, tpos="0.5 PPR - WR", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_half-point-ppr-te.tsv",sep=""), sep="\t")
-error.bar.plot(low = 1, high = 30, k=5, tpos="0.5 PPR - TE", dat=dat)
-dat = read.delim(paste(datdir, "week_",thisweek,"_half-point-ppr-flex.tsv",sep=""), sep="\t")
-error.bar.plot(low = 15, high = 75, k=9, tpos="0.5 PPR - Flex", dat=dat)
 
