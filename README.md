@@ -1,1 +1,3 @@
-This code is written only to run on Mac OSX.
+This code has only been tested on Mac OS X.
+
+More detailed README coming soon!
