@@ -9,3 +9,5 @@ TODO:
 - Half PPR charts
 - 6PaTD model?
 - Find a clustering package that does not require K as input.
+
+Read more about the model here: www.nytimes.com/2013/10/11/sports/football/turning-advanced-statistics-into-fantasy-football-analysis.html
