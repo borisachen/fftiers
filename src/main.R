@@ -12,15 +12,16 @@ useold = FALSE		# Do we want to use the original version of the charts?
 mkdir <- function(dir) system(paste("mkdir -p", dir))
 datdir = "~/projects/fftiers/dat/2014/"; mkdir(datdir)
 outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(outputdir)
+outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
+outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
+outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
 
 ### Curl data from fantasypros
 
 # Which positions do we want to fetch?
 pos.list = c('qb','rb','wr','te','flex','k','dst')
-
-# Can also download PPR, half PPR, and rest-of-season data
-pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex',
-             'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+			# 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
+            # 'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 			# 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
@@ -38,14 +39,15 @@ if (download == TRUE) {
   # overall rankings download:
   overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-raw.xls'
   ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-ppr-raw.xls'
-  system(overall.url); Sys.sleep(0.5)
-  system(ppr.url); Sys.sleep(0.5)
+  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-half-ppr-raw.xls'
+  system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
   sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-raw.xls', 
   			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all', '.tsv',sep="")
   sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-ppr-raw.xls', 
   			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-  system(sedstr);
-  system(sedstr2);
+  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-half-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+  system(sedstr);  system(sedstr2); system(sedstr3);
   
 }
 
@@ -68,13 +70,14 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	this.pos$mcluster <-  mclust$class
 	
 	# Print out names
-	fileConn<-file(paste(outputdir,"text_",tpos,".txt",sep=""))
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) fileConn<-file(paste(outputdir,"text_",tpos,'-adjust', adjust,".txt",sep=""))
+	fileConn<-file(paste(outputdirtxt,"text_",tpos,".txt",sep=""))
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')| (tpos == 'ALL-HALF-PPR')) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', adjust,".txt",sep=""))
 	tier.list = array("", k)
 	for (i in 1:k) {
       foo <- this.pos[this.pos $cluster==i,]
       foo <- this.pos[this.pos $mcluster==i,]
       es = paste("Tier ",i,": ",sep="")
+      if (adjust>0) es = paste("Tier ",i+adjust,": ",sep="")
       for (j in 1:nrow(foo)) es = paste(es,foo$Player.Name[j], ", ", sep="")
       es = substring(es, 1, nchar(es)-2)
       tier.list[i] = es
@@ -84,9 +87,10 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	this.pos$Tier 	= factor(this.pos$mcluster)
 	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
 
+
 	bigfont			= c("QB","TE","K","DST", "PPR-TE", "ROS-TE", "0.5 PPR-TE", "ROS-QB")
 	smfont			= c("RB", "PPR-RB", "ROS-RB", "0.5 PPR-RB")
-	tinyfont		= c("WR","Flex", "PPR-WR", "ROS-WR","PPR-Flex", "0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR')
+	tinyfont		= c("WR","Flex", "PPR-WR", "ROS-WR","PPR-Flex", "0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR')
 	
 	if (tpos %in% bigfont) {font = 3.5; barsize=1.5;  dotsize=2;   }
 	if (tpos %in% smfont)  {font = 3;   barsize=1.25; dotsize=1.5; }
@@ -109,7 +113,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Ave.Rank - nchar/3 - Std.Dev/1.8), size=font) 
     if ((tpos == 'ALL') | (tpos == 'ALL-PPR'))
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Ave.Rank - nchar/3 - Std.Dev/1.8), size=font) + geom_text(aes(label=Position, y = Ave.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') 
-    p = p + scale_x_continuous("Weight Adjusted Expert Concensus Rank")
+    p = p + scale_x_continuous("Expert Consensus Rank")
     p = p + ylab("Average Expert Rank")
     p = p + theme(legend.justification=c(1,1), legend.position=c(1,1))
     p = p + scale_colour_discrete(name="Tier")
@@ -117,9 +121,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     maxy = max( abs(this.pos$Ave.Rank)+this.pos$Std.Dev/2) 
 	if (tpos!='Flex') p = p + ylim(-4, maxy)
     if (tpos=="Flex") p = p + ylim(4, maxy)
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) p = p + ylim(low-XLOW, maxy+5)
-	outfile = paste(outputdir, "week-", thisweek, "-", tpos, ".png", sep="")
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) outfile = paste(outputdir, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
+	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
 	
 	if (useold == TRUE) {
 		this.pos$position.rank = -this.pos$position.rank 
@@ -133,13 +137,19 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	  if (tpos %in% bigfont) p = p + geom_text(aes(label=Player.Name, colour=factor(mcluster), y = Ave.Rank), size=font, angle=15) 
 	  if (tpos %in% smfont) p = p + geom_text(aes(label=Player.Name, colour=factor(mcluster), y = Ave.Rank), size=font, angle=15) 
 	  if (tpos %in% tinyfont) p = p + geom_text(aes(label=Player.Name, colour=factor(mcluster), y = Ave.Rank), size=font, angle=15) 
-      p = p + scale_x_continuous("Weighted Expert Concensus Rank")
+      p = p + scale_x_continuous("xpert Consensus Rank")
       p = p + scale_y_continuous("Average Rank")
       p = p + theme(legend.position="none") 
       p = p + scale_colour_hue(l=60, h=c(0,280))
       outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.png", sep="")
 	}
 
+	# write the table to csv
+	outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos, ".csv", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
+	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
+	write.csv(this.pos, outfilecsv)
+	
     p
     ggsave(file=outfile, width=9.5, height=8, dpi=100)
 	return(p)
@@ -157,15 +167,15 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0) {
 injured <- c('David Wilson')
 
 
-draw.tiers("all", 1, 70, 10, XLOW=5)
-draw.tiers("all", 71, 140, 8, adjust=10, XLOW=16)
-draw.tiers("all", 141, 200, 5, adjust=17, XLOW=30)
+draw.tiers("all", 1, 69, 10, XLOW=5)
+draw.tiers("all", 70, 138, 7, adjust=10, XLOW=16)
+draw.tiers("all", 139, 200, 6, adjust=17, XLOW=40)
 
 draw.tiers("qb", 1, 32, 9)
 draw.tiers("rb", 1, 40, 10)
 draw.tiers("wr", 1, 60, 10)
-draw.tiers("te", 1, 24, 7)
-draw.tiers("flex", 15, 75, 13)
+draw.tiers("te", 1, 24, 8)
+#draw.tiers("flex", 15, 75, 13)
 draw.tiers("k", 1, 29, 5)
 draw.tiers("dst", 1, 32, 6)
 
@@ -173,7 +183,12 @@ draw.tiers("dst", 1, 32, 6)
 # PPR
 draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
 draw.tiers("all-ppr", 71, 140, 8, adjust=10, XLOW=16)
-draw.tiers("all-ppr", 141, 200, 5, adjust=17, XLOW=30)
+draw.tiers("all-ppr", 141, 200, 5, adjust=17, XLOW=50)
+
+draw.tiers("all-half-ppr", 1, 70, 10, XLOW=5)
+draw.tiers("all-half-ppr", 71, 140, 8, adjust=10, XLOW=16)
+draw.tiers("all-half-ppr", 141, 200, 4, adjust=17, XLOW=50)
+
 draw.tiers("ppr-rb", 1, 40, 10)
 draw.tiers("ppr-wr", 1, 60, 10)
 draw.tiers("ppr-te", 1, 24, 6)
