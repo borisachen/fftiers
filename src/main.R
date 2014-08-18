@@ -19,9 +19,9 @@ outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); 
 ### Curl data from fantasypros
 
 # Which positions do we want to fetch?
-pos.list = c('qb','rb','wr','te','flex','k','dst')
-			# 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
-            # 'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+pos.list = c('qb','rb','wr','te','flex','k','dst',
+			 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
+             'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 			# 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
@@ -54,7 +54,7 @@ if (download == TRUE) {
 
 ### main plotting function
 
-error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0) {
+error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360) {
 	#if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", sep="")
 	if (tpos!='ALL') title = paste("Pre-draft - ",tpos," Tiers", sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", sep="")
@@ -117,7 +117,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     p = p + ylab("Average Expert Rank")
     p = p + theme(legend.justification=c(1,1), legend.position=c(1,1))
     p = p + scale_colour_discrete(name="Tier")
-	p = p + scale_colour_hue(l=55, h=c(0,300))
+	p = p + scale_colour_hue(l=55, h=c(0, highcolor))
     maxy = max( abs(this.pos$Ave.Rank)+this.pos$Std.Dev/2) 
 	if (tpos!='Flex') p = p + ylim(-4, maxy)
     if (tpos=="Flex") p = p + ylim(4, maxy)
@@ -140,7 +140,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       p = p + scale_x_continuous("xpert Consensus Rank")
       p = p + scale_y_continuous("Average Rank")
       p = p + theme(legend.position="none") 
-      p = p + scale_colour_hue(l=60, h=c(0,280))
+      p = p + scale_colour_hue(l=60, h=c(0, highcolor))
       outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.png", sep="")
 	}
 
@@ -156,20 +156,21 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 }
 
 ## Wrapper function around error.bar.plot
-draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0) {
+draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
  	dat <- dat[!dat$Rank %in% injured,]
 	tpos = toupper(pos); if(pos=="flex")tpos<-"Flex"
-	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW)
+	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
 }
 
 ## If there are any injured players, list them here to remove them
 injured <- c('David Wilson')
 
-
-draw.tiers("all", 1, 69, 10, XLOW=5)
-draw.tiers("all", 70, 138, 7, adjust=10, XLOW=16)
-draw.tiers("all", 139, 200, 6, adjust=17, XLOW=40)
+useold=F
+draw.tiers("all", 1, 48, 10, XLOW=5, highcolor=720)
+draw.tiers("all", 1, 78, 10, XLOW=5, highcolor=720)
+draw.tiers("all", 49, 100, 6, adjust=10, XLOW=10, highcolor=720)
+draw.tiers("all", 101, 170, 6, adjust=16, XLOW=16, highcolor=500)
 
 draw.tiers("qb", 1, 32, 9)
 draw.tiers("rb", 1, 40, 10)
@@ -182,12 +183,12 @@ draw.tiers("dst", 1, 32, 6)
 
 # PPR
 draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
-draw.tiers("all-ppr", 71, 140, 8, adjust=10, XLOW=16)
-draw.tiers("all-ppr", 141, 200, 5, adjust=17, XLOW=50)
+draw.tiers("all-ppr", 71, 140, 6, adjust=10, XLOW=16)
+draw.tiers("all-ppr", 141, 200, 5, adjust=16, XLOW=30)
 
 draw.tiers("all-half-ppr", 1, 70, 10, XLOW=5)
-draw.tiers("all-half-ppr", 71, 140, 8, adjust=10, XLOW=16)
-draw.tiers("all-half-ppr", 141, 200, 4, adjust=17, XLOW=50)
+draw.tiers("all-half-ppr", 71, 140, 6, adjust=10, XLOW=16)
+draw.tiers("all-half-ppr", 141, 200, 4, adjust=16, XLOW=30)
 
 draw.tiers("ppr-rb", 1, 40, 10)
 draw.tiers("ppr-wr", 1, 60, 10)
