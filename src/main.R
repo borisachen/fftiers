@@ -19,9 +19,9 @@ outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); 
 ### Curl data from fantasypros
 
 # Which positions do we want to fetch?
-pos.list = c('qb','rb','wr','te','flex','k','dst',
-			 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
-             'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+pos.list = c('qb','rb','wr','te','flex','k','dst'),
+			# 'ppr-rb','ppr-wr','ppr-te','ppr-flex',
+            # 'half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 			# 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
@@ -158,19 +158,25 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 ## Wrapper function around error.bar.plot
 draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
- 	dat <- dat[!dat$Rank %in% injured,]
+ 	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); if(pos=="flex")tpos<-"Flex"
 	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
 }
 
 ## If there are any injured players, list them here to remove them
-injured <- c('David Wilson')
+injured <- c('David Wilson','Sam Bradford')
 
 useold=F
-draw.tiers("all", 1, 48, 10, XLOW=5, highcolor=720)
+draw.tiers("all", 1, 43, 6, XLOW=5, highcolor=720)
 draw.tiers("all", 1, 78, 10, XLOW=5, highcolor=720)
-draw.tiers("all", 49, 100, 6, adjust=10, XLOW=10, highcolor=720)
-draw.tiers("all", 101, 170, 6, adjust=16, XLOW=16, highcolor=500)
+draw.tiers("all", 1, 100, 11, XLOW=5, highcolor=720)
+
+useold=F
+draw.tiers("all", 93, 180, 9, adjust=10, XLOW=18, highcolor=540)
+
+draw.tiers("all", 41, 160, 7, adjust=10, XLOW=18, highcolor=720)
+
+draw.tiers("all", 93, 220, 4, adjust=16, XLOW=16, highcolor=500)
 
 draw.tiers("qb", 1, 32, 9)
 draw.tiers("rb", 1, 40, 10)
