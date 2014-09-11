@@ -3,7 +3,7 @@ require('ggplot2')
 
 ### Parameters 
 
-thisweek = 1
+thisweek = 2
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
@@ -19,9 +19,9 @@ outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); 
 ### Curl data from fantasypros
 
 # Which positions do we want to fetch?
-#pos.list = c('qb','rb','wr','te','flex','k','dst')
+pos.list = c('qb','rb','wr','te','flex','k','dst')
 #pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex')
-pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+#pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 #			 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
@@ -29,27 +29,29 @@ if (download == TRUE) {
   for (mp in pos.list) {
  	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,
 				'.php?export=xls > ~/projects/fftiers/dat/2014/week-', 
+#				'.php?export=xls > ~/projects/fftiers/dat/2014/week-', 
 				thisweek, '-',mp,'-raw.xls', sep="")
     system(curlstr); #Sys.sleep(3)
     sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-',mp,'-raw.xls', 
   			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', mp, '.tsv',sep="")
     system(sedstr); #Sys.sleep(3)
-  }	
-  
-  # overall rankings download:
-  #overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-raw.xls'
-  #ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-ppr-raw.xls'
-  #half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-half-ppr-raw.xls'
-  #system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
-  #sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-raw.xls', 
-  #			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all', '.tsv',sep="")
-  #sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-ppr-raw.xls', 
-  #			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-  #sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-half-ppr-raw.xls', 
-  #			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
-  #system(sedstr);  system(sedstr2); system(sedstr3);
-  
+  }	  
 }
+
+  # overall rankings download:
+download.predraft.data <- function() {
+  overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-raw.xls'
+  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-ppr-raw.xls'
+  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-half-ppr-raw.xls'
+  system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
+  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all', '.tsv',sep="")
+  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-half-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+  system(sedstr);  
+  system(sedstr2); system(sedstr3);
+}  
 
 
 ### main plotting function
@@ -161,9 +163,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 ## Wrapper function around error.bar.plot
 draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
-	
-	colnames(dat) <- colnames(dat[2:ncol(dat)])
-	
+	if (thisweek != -10) colnames(dat) <- colnames(dat[2:ncol(dat)])
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
 	if (pos == "flex") tpos <- "Flex"
@@ -171,30 +171,12 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 }
 
 ## If there are any injured players, list them here to remove them
-injured <- c('David Wilson','Sam Bradford')
-
-# PRESEASON
-
-draw.tiers("all", 1, 43, 6, XLOW=5, highcolor=720)
-draw.tiers("all", 1, 78, 10, XLOW=5, highcolor=720)
-draw.tiers("all", 1, 100, 11, XLOW=5, highcolor=720)
-
-draw.tiers("all", 93, 180, 9, adjust=10, XLOW=18, highcolor=540)
-draw.tiers("all", 41, 160, 7, adjust=10, XLOW=18, highcolor=720)
-draw.tiers("all", 93, 220, 4, adjust=16, XLOW=16, highcolor=500)
-
-draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
-draw.tiers("all-ppr", 71, 140, 6, adjust=10, XLOW=16)
-draw.tiers("all-ppr", 141, 200, 5, adjust=16, XLOW=30)
-
-draw.tiers("all-half-ppr", 1, 70, 10, XLOW=5)
-draw.tiers("all-half-ppr", 71, 140, 6, adjust=10, XLOW=16)
-draw.tiers("all-half-ppr", 141, 200, 4, adjust=16, XLOW=30)
+injured <- c('David Wilson','Sam Bradford', 'Wes Welker')
 
 ## Week 1
 
-draw.tiers("qb", 1, 26, 8)
-draw.tiers("rb", 1, 40, 10)
+draw.tiers("qb", 1, 26, 7)
+draw.tiers("rb", 1, 50, 11)
 draw.tiers("wr", 1, 60, 10)
 draw.tiers("te", 1, 26, 8)
 draw.tiers("flex", 25, 85, 13, XLOW=-15)
@@ -210,3 +192,22 @@ draw.tiers("half-point-ppr-rb", 1, 40, 10)
 draw.tiers("half-point-ppr-wr", 1, 60, 10)
 draw.tiers("half-point-ppr-te", 1, 26, 8)
 draw.tiers("half-point-ppr-flex", 25, 85, 13, XLOW=-12)
+
+
+# PRESEASON
+COMMENT <- function() {
+draw.tiers("all", 1, 65, 13, XLOW=5, highcolor=720)
+draw.tiers("all", 66, 160, 9, adjust=13, XLOW=18, highcolor=540)
+draw.tiers("all", 1, 100, 20, XLOW=5, highcolor=720)
+draw.tiers("all", 1, 80, 11, XLOW=5, highcolor=720)
+draw.tiers("all", 41, 160, 7, adjust=10, XLOW=18, highcolor=720)
+draw.tiers("all", 93, 220, 4, adjust=16, XLOW=16, highcolor=500)
+
+draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
+draw.tiers("all-ppr", 71, 140, 6, adjust=10, XLOW=16)
+draw.tiers("all-ppr", 141, 200, 5, adjust=16, XLOW=30)
+
+draw.tiers("all-half-ppr", 1, 70, 10, XLOW=5)
+draw.tiers("all-half-ppr", 71, 140, 6, adjust=10, XLOW=16)
+draw.tiers("all-half-ppr", 141, 200, 4, adjust=16, XLOW=30)
+}
