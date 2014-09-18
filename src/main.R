@@ -3,7 +3,7 @@ require('ggplot2')
 
 ### Parameters 
 
-thisweek = 2
+thisweek = 3
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
@@ -20,17 +20,14 @@ outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); 
 
 # Which positions do we want to fetch?
 pos.list = c('qb','rb','wr','te','flex','k','dst')
-#pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex')
-#pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
+pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex')
+pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
 #			 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
 
 if (download == TRUE) {
   # download data for each position
   for (mp in pos.list) {
- 	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,
-				'.php?export=xls > ~/projects/fftiers/dat/2014/week-', 
-#				'.php?export=xls > ~/projects/fftiers/dat/2014/week-', 
-				thisweek, '-',mp,'-raw.xls', sep="")
+ 	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2014/week-', thisweek, '-',mp,'-raw.xls', sep="")
     system(curlstr); #Sys.sleep(3)
     sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-',mp,'-raw.xls', 
   			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', mp, '.tsv',sep="")
@@ -70,6 +67,25 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	df = this.pos[,c(which(colnames(this.pos)=="Ave.Rank"))]
 	mclust <- Mclust(df, G=k)
 	this.pos$mcluster <-  mclust$class
+	
+	# if there were less clusters than we asked for, shift the indicies
+	clusters.found <- levels(factor(this.pos$mcluster))
+	if (length(clusters.found) < k) 
+	{
+		missing.cluster <- which(!(c(1:k) %in% clusters.found))
+		if (length(missing.cluster)==1) 
+		{
+			print('Only 1 missing clusters, we can fix that!')
+			for (i in (missing.cluster+1):k) 
+			{
+				this.pos$mcluster[which(this.pos$mcluster==i)] <- i-1
+			}
+		}
+		if (length(missing.cluster)>1) 
+		{
+			print('More than 2 missing clusters, try another k!')
+		}
+	}
 	
 	# Print out names
 	fileConn<-file(paste(outputdirtxt,"text_",tpos,".txt",sep=""))
@@ -171,27 +187,27 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 }
 
 ## If there are any injured players, list them here to remove them
-injured <- c('David Wilson','Sam Bradford', 'Wes Welker')
+injured <- c('Jamaal Charles', 'A.J. Green', 'John Parker Wilson')
 
 ## Week 1
 
-draw.tiers("qb", 1, 26, 7)
+draw.tiers("qb", 1, 26, 9)
 draw.tiers("rb", 1, 50, 11)
-draw.tiers("wr", 1, 60, 10)
-draw.tiers("te", 1, 26, 8)
-draw.tiers("flex", 25, 85, 13, XLOW=-15)
-draw.tiers("k", 1, 29, 5)
-draw.tiers("dst", 1, 32, 6)
+draw.tiers("wr", 1, 58, 13)
+draw.tiers("te", 1, 25, 8)
+draw.tiers("flex", 25, 85, 11, XLOW=-15)
+draw.tiers("k", 1, 25, 7)
+draw.tiers("dst", 1, 30, 7)
 
-draw.tiers("ppr-rb", 1, 40, 10)
-draw.tiers("ppr-wr", 1, 60, 10)
+draw.tiers("ppr-rb", 1, 40, 11)
+draw.tiers("ppr-wr", 1, 60, 13, highcolor=400)
 draw.tiers("ppr-te", 1, 26, 8)
-draw.tiers("ppr-flex", 25, 85, 13, XLOW=-12)
+draw.tiers("ppr-flex", 25, 85, 12, XLOW=-12, highcolor=400)
 
-draw.tiers("half-point-ppr-rb", 1, 40, 10)
-draw.tiers("half-point-ppr-wr", 1, 60, 10)
-draw.tiers("half-point-ppr-te", 1, 26, 8)
-draw.tiers("half-point-ppr-flex", 25, 85, 13, XLOW=-12)
+draw.tiers("half-point-ppr-rb", 1, 40, 9)
+draw.tiers("half-point-ppr-wr", 1, 60, 13, highcolor=400)
+draw.tiers("half-point-ppr-te", 1, 26, 7)
+draw.tiers("half-point-ppr-flex", 25, 85, 11, XLOW=-12, highcolor=400)
 
 
 # PRESEASON
