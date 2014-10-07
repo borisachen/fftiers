@@ -3,7 +3,7 @@ require('ggplot2')
 
 ### Parameters 
 
-thisweek = 3
+thisweek = 6
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
@@ -18,12 +18,7 @@ outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); 
 
 ### Curl data from fantasypros
 
-# Which positions do we want to fetch?
-pos.list = c('qb','rb','wr','te','flex','k','dst')
-pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex')
-pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex')
-#			 'ros-qb','ros-rb','ros-wr','ros-te','ros-k', 'ros-dst')
-
+download.data <- function() {
 if (download == TRUE) {
   # download data for each position
   for (mp in pos.list) {
@@ -34,6 +29,13 @@ if (download == TRUE) {
     system(sedstr); #Sys.sleep(3)
   }	  
 }
+}
+# Which positions do we want to fetch?
+pos.list = c('qb','rb','wr','te','flex','k','dst'); download.data()
+pos.list = c('ppr-rb','ppr-wr','ppr-te','ppr-flex'); download.data()
+pos.list = c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'); download.data()
+
+
 
   # overall rankings download:
 download.predraft.data <- function() {
@@ -140,8 +142,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	p = p + scale_colour_hue(l=55, h=c(0, highcolor))
     maxy = max( abs(this.pos$Ave.Rank)+this.pos$Std.Dev/2) 
     
-	if (tpos!='Flex') p = p + ylim(-4, maxy)
+	if (tpos!='Flex') p = p + ylim(-6, maxy)
     if ((tpos=="Flex") | (tpos=="PPR-FLEX") | (tpos=="HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
+    #p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
@@ -187,17 +190,17 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 }
 
 ## If there are any injured players, list them here to remove them
-injured <- c('Jamaal Charles', 'A.J. Green', 'John Parker Wilson')
+injured <- c('Rashad Jennings', 'Calvin Johnson')
 
 ## Week 1
 
-draw.tiers("qb", 1, 26, 9)
-draw.tiers("rb", 1, 50, 11)
-draw.tiers("wr", 1, 58, 13)
-draw.tiers("te", 1, 25, 8)
-draw.tiers("flex", 25, 85, 11, XLOW=-15)
-draw.tiers("k", 1, 25, 7)
-draw.tiers("dst", 1, 30, 7)
+draw.tiers("qb", 1, 28, 9)
+draw.tiers("rb", 1, 50, 11, highcolor=450)
+draw.tiers("wr", 1, 58, 13, highcolor=500, XLOW=5)
+draw.tiers("te", 1, 25, 8, XLOW=5)
+draw.tiers("flex", 25, 85, 11, XLOW=-10)
+draw.tiers("k", 1, 25, 6, XLOW=5)
+draw.tiers("dst", 1, 30, 7, XLOW=5)
 
 draw.tiers("ppr-rb", 1, 40, 11)
 draw.tiers("ppr-wr", 1, 60, 13, highcolor=400)
@@ -207,7 +210,7 @@ draw.tiers("ppr-flex", 25, 85, 12, XLOW=-12, highcolor=400)
 draw.tiers("half-point-ppr-rb", 1, 40, 9)
 draw.tiers("half-point-ppr-wr", 1, 60, 13, highcolor=400)
 draw.tiers("half-point-ppr-te", 1, 26, 7)
-draw.tiers("half-point-ppr-flex", 25, 85, 11, XLOW=-12, highcolor=400)
+draw.tiers("half-point-ppr-flex", 25, 85, 11, XLOW=-0, highcolor=400)
 
 
 # PRESEASON
