@@ -142,7 +142,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	p = p + scale_colour_hue(l=55, h=c(0, highcolor))
     maxy = max( abs(this.pos$Ave.Rank)+this.pos$Std.Dev/2) 
     
-	if (tpos!='Flex') p = p + ylim(-6, maxy)
+	if (tpos!='Flex') p = p + ylim(-5, maxy)
     if ((tpos=="Flex") | (tpos=="PPR-FLEX") | (tpos=="HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
     #p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
@@ -191,15 +191,17 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 
 ## If there are any injured players, list them here to remove them
 injured <- c('Rashad Jennings', 'Calvin Johnson')
+injured <- c('A.J. Green')
 
 ## Week 1
 
-draw.tiers("qb", 1, 28, 9)
-draw.tiers("rb", 1, 50, 11, highcolor=450)
-draw.tiers("wr", 1, 58, 13, highcolor=500, XLOW=5)
-draw.tiers("te", 1, 25, 8, XLOW=5)
-draw.tiers("flex", 25, 85, 11, XLOW=-10)
-draw.tiers("k", 1, 25, 6, XLOW=5)
+draw.tiers("qb", 1, 26, 13, highcolor=500)
+draw.tiers("qb", 1, 26, 6, highcolor=360)
+draw.tiers("rb", 1, 40, 11, highcolor=450)
+draw.tiers("wr", 1, 60, 15, highcolor=600, XLOW=5)
+draw.tiers("te", 1, 25, 9, XLOW=5)
+draw.tiers("flex", 24, 85, 15, XLOW=-10, highcolor=550)
+draw.tiers("k", 1, 25, 5, XLOW=5)
 draw.tiers("dst", 1, 30, 7, XLOW=5)
 
 draw.tiers("ppr-rb", 1, 40, 11)
