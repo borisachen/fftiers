@@ -49,6 +49,20 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	mclust <- Mclust(df, G=k)
 	this.pos$mcluster <-  mclust$class
 	
+	
+	# if there were less clusters than we asked for, shift the indicies
+	clusters.found <- levels(factor(this.pos$mcluster))
+	clusters.found = as.numeric(clusters.found)
+	for (i in 1:k) {
+		if ( sum(this.pos$mcluster ==i)==0 ) { # if you don't find any of this cluster
+			# decrease everything above it by one
+			this.pos$mcluster[this.pos$mcluster>i] <- this.pos$mcluster[this.pos$mcluster>i]-1
+		}
+	}
+	
+	
+	
+	comment <- function() {
 	# if there were less clusters than we asked for, shift the indicies
 	clusters.found <- levels(factor(this.pos$mcluster))
 	if (length(clusters.found) < k) 
@@ -67,6 +81,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 			print('More than 2 missing clusters, try another k!')
 		}
 	}
+	}
+	
+	
+	
+	
 	
 	# Print out names
 	txt.path = paste(outputdirtxt,"text_",tpos,".txt",sep="")
@@ -166,7 +185,12 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 	if (thisweek != -10) colnames(dat) <- colnames(dat[2:ncol(dat)])
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
+#	k = floor(high/4)
 	if (pos == "flex") tpos <- "Flex"
+	if (k <= 10) highcolor <- 360
+	if (k > 11) highcolor <- 450
+	if (k > 13) highcolor <- 550
+	if (k > 15) highcolor <- 650
 	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
 }
 
