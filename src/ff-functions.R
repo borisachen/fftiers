@@ -60,7 +60,13 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 		}
 	}
 	
-	
+	for (i in (2):(nrow(this.pos)-1)) {
+		if (this.pos$mcluster[i-1] == this.pos$mcluster[i+1]) {
+			if (this.pos$mcluster[i] != this.pos$mcluster[i+1]) {
+				this.pos$mcluster[i] <- this.pos$mcluster[i+1]
+			}
+		}
+	}
 	
 	comment <- function() {
 	# if there were less clusters than we asked for, shift the indicies
