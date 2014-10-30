@@ -32,9 +32,9 @@ injured <- c('')
 
 ## Weekly
 draw.tiers("qb", 1, 26, 8, highcolor=360)
-draw.tiers("rb", 1, 40, 8, highcolor=400)
+draw.tiers("rb", 1, 40, 10, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
-draw.tiers("te", 1, 25, 5, XLOW=5)
+draw.tiers("te", 1, 25, 6, XLOW=5)
 draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
 draw.tiers("dst", 1, 26, 6, XLOW=5)

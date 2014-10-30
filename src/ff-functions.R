@@ -200,3 +200,121 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
 }
 
+
+
+## Trade value?
+trade.value <- function() {
+	NUM.RB = 55
+
+	dat = read.delim('~/Downloads/rbtrade.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1:NUM.RB,]
+	base.rb = dat$Avg.Rank[NUM.RB]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	rb.dat = dat[,c(1,2,10)]
+	rb.dat$Position = 'RB'
+	
+	NUM.WR = 57
+	WR.ADJUST = 2
+	
+	dat = read.delim('~/Downloads/wrtrade.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.WR,]
+	dat$value =(round(base.rb - dat$Avg.Rank - WR.ADJUST, 1))
+	wr.dat = dat[,c(1,2,10)]
+	wr.dat$Position = 'WR'
+	
+	NUM.TE = 16
+		TOP.TE = 41
+	dat = read.delim('~/Downloads/tetrade.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.TE,]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	te.dat = dat[,c(1,2,10)]
+	te.dat$value = (te.dat$value-te.dat$value[nrow(te.dat)]) 
+	NEW.TOP = te.dat$value[1]
+	te.dat$value = te.dat$value*TOP.TE/NEW.TOP
+	te.dat$Position = 'TE'
+	
+	NUM.QB = 22
+		TOP.QB = 44
+	dat = read.delim('~/Downloads/qbtrade.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.QB,]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	qb.dat = dat[,c(1,2,10)]
+	TOP = qb.dat$value[1]
+	qb.dat$value = (qb.dat$value-qb.dat$value[nrow(qb.dat)]) 
+	NEW.TOP = qb.dat$value[1]
+	qb.dat$value = qb.dat$value* TOP.QB/NEW.TOP
+	qb.dat$Position = 'QB'
+	
+	dat = rbind(rb.dat, wr.dat, te.dat, qb.dat)
+	dat = dat[order(dat$value, decreasing=T),]
+	dat$value[dat$value<1]=1
+	dat$value = round(dat$value,0)
+	colnames(dat) <- c('Player', 'Team', 'Value', 'Position')
+	dat
+	
+	write.table(dat, '~/projects/fftiers/tradevalue.tsv', row.names=FALSE, quote=F, sep='\t')
+}
+
+
+
+
+## Trade value?
+trade.value <- function() {
+	NUM.RB = 55
+
+	dat = read.delim('~/Downloads/rb-trade-ppr.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1:NUM.RB,]
+	base.rb = dat$Avg.Rank[NUM.RB]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	rb.dat = dat[,c(1,2,10)]
+	rb.dat$Position = 'RB'
+	
+	NUM.WR = 57
+	WR.ADJUST = 0
+	
+	dat = read.delim('~/Downloads/wr-trade-ppr.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.WR,]
+	dat$value =(round(base.rb - dat$Avg.Rank - WR.ADJUST, 1))
+	wr.dat = dat[,c(1,2,10)]
+	wr.dat$Position = 'WR'
+	
+	NUM.TE = 16
+		TOP.TE = 45
+	dat = read.delim('~/Downloads/te-trade-ppr.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.TE,]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	te.dat = dat[,c(1,2,10)]
+	te.dat$value = (te.dat$value-te.dat$value[nrow(te.dat)]) 
+	NEW.TOP = te.dat$value[1]
+	te.dat$value = te.dat$value*TOP.TE/NEW.TOP
+	te.dat$Position = 'TE'
+	
+	NUM.QB = 22
+		TOP.QB = 43
+	dat = read.delim('~/Downloads/qbtrade.tsv', sep="\t")
+	colnames(dat)[1:8] = colnames(dat)[2:9]
+	dat = dat[1: NUM.QB,]
+	dat$value =(round(base.rb - dat$Avg.Rank, 1))
+	qb.dat = dat[,c(1,2,10)]
+	TOP = qb.dat$value[1]
+	qb.dat$value = (qb.dat$value-qb.dat$value[nrow(qb.dat)]) 
+	NEW.TOP = qb.dat$value[1]
+	qb.dat$value = qb.dat$value* TOP.QB/NEW.TOP
+	qb.dat$Position = 'QB'
+	
+	dat = rbind(rb.dat, wr.dat, te.dat, qb.dat)
+	dat = dat[order(dat$value, decreasing=T),]
+	dat$value[dat$value<1]=1
+	dat$value = round(dat$value,0)
+	colnames(dat) <- c('Player', 'Team', 'Value', 'Position')
+	dat
+	
+	write.table(dat, '~/projects/fftiers/tradevalue-ppr.tsv', row.names=FALSE, quote=F, sep='\t')
+}
