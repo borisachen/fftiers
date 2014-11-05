@@ -204,19 +204,18 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
 
 ## Trade value?
 trade.value <- function() {
-	NUM.RB = 55
-
+		NUM.RB = 52
+		base.rb = 57
 	dat = read.delim('~/Downloads/rbtrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1:NUM.RB,]
-	base.rb = dat$Avg.Rank[NUM.RB]
+	#base.rb = dat$Avg.Rank[NUM.RB]
 	dat$value =(round(base.rb - dat$Avg.Rank, 1))
 	rb.dat = dat[,c(1,2,10)]
 	rb.dat$Position = 'RB'
 	
-	NUM.WR = 57
-	WR.ADJUST = 2
-	
+		NUM.WR = 57
+		WR.ADJUST = 2
 	dat = read.delim('~/Downloads/wrtrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.WR,]
@@ -224,8 +223,8 @@ trade.value <- function() {
 	wr.dat = dat[,c(1,2,10)]
 	wr.dat$Position = 'WR'
 	
-	NUM.TE = 16
-		TOP.TE = 41
+		NUM.TE = 18
+		TOP.TE = 51
 	dat = read.delim('~/Downloads/tetrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.TE,]
@@ -236,8 +235,8 @@ trade.value <- function() {
 	te.dat$value = te.dat$value*TOP.TE/NEW.TOP
 	te.dat$Position = 'TE'
 	
-	NUM.QB = 22
-		TOP.QB = 44
+		NUM.QB = 24
+		TOP.QB = 51
 	dat = read.delim('~/Downloads/qbtrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.QB,]
@@ -252,8 +251,17 @@ trade.value <- function() {
 	dat = rbind(rb.dat, wr.dat, te.dat, qb.dat)
 	dat = dat[order(dat$value, decreasing=T),]
 	dat$value[dat$value<1]=1
-	dat$value = round(dat$value,0)
+	dat$value = round(dat$value,1)
 	colnames(dat) <- c('Player', 'Team', 'Value', 'Position')
+	dat$Value[dat$Player=='Josh Gordeon'] = 20
+	dat$Value[dat$Player=='Isaiah Crowell'] = 1
+	dat$Value[dat$Player=='Branden Oliver'] = 18
+	dat$exp.value = 1/(1+exp(-(dat$Value-dat$Value[1]*0.8)/10)) * 50
+	dat$exp.value <- round(dat$exp.value,1)
+	dat = dat[order(dat$Value, decreasing=T),]
+	dat
+	
+	dat$Value = dat$exp.value; dat$exp.value <- NULL
 	dat
 	
 	write.table(dat, '~/projects/fftiers/tradevalue.tsv', row.names=FALSE, quote=F, sep='\t')
