@@ -4,7 +4,7 @@ source('~/projects/fftiers/src/ff-functions.R')
 
 ### Parameters 
 
-thisweek = 10
+thisweek = 11
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
@@ -32,9 +32,9 @@ injured <- c('')
 
 ## Weekly
 draw.tiers("qb", 1, 26, 8, highcolor=360)
-draw.tiers("rb", 1, 40, 10, highcolor=400)
-draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
-draw.tiers("te", 1, 25, 6, XLOW=5)
+draw.tiers("rb", 1, 40, 9, highcolor=400)
+draw.tiers("wr", 1, 60, 11, highcolor=500, XLOW=5)
+draw.tiers("te", 1, 25, 7, XLOW=5)
 draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
 draw.tiers("dst", 1, 26, 6, XLOW=5)
@@ -49,7 +49,7 @@ draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
 draw.tiers("half-point-ppr-te", 1, 30, 7)
 draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
-
+injured <- c('')
 
 draw.tiers("ros-qb", 1, 32, 7, highcolor=360)
 draw.tiers("ros-rb", 1, 50, 12, highcolor=500)
