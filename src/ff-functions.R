@@ -223,7 +223,7 @@ trade.value <- function() {
 	wr.dat = dat[,c(1,2,10)]
 	wr.dat$Position = 'WR'
 	
-		NUM.TE = 18
+		NUM.TE = 17
 		TOP.TE = 51
 	dat = read.delim('~/Downloads/tetrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
@@ -262,7 +262,9 @@ trade.value <- function() {
 	dat
 	
 	dat$Value = dat$exp.value; dat$exp.value <- NULL
-	dat
+	stddat=dat
+	stddat $Team = stddat $Position = NULL
+	colnames(stddat)=c('Player','Value')
 	
 	write.table(dat, '~/projects/fftiers/tradevalue.tsv', row.names=FALSE, quote=F, sep='\t')
 }
@@ -274,7 +276,7 @@ trade.value <- function() {
 trade.value <- function() {
 	NUM.RB = 55
 
-	dat = read.delim('~/Downloads/rb-trade-ppr.tsv', sep="\t")
+	dat = read.delim('~/Downloads/rbtrade-ppr.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1:NUM.RB,]
 	base.rb = dat$Avg.Rank[NUM.RB]
@@ -285,16 +287,16 @@ trade.value <- function() {
 	NUM.WR = 57
 	WR.ADJUST = 0
 	
-	dat = read.delim('~/Downloads/wr-trade-ppr.tsv', sep="\t")
+	dat = read.delim('~/Downloads/wrtrade-ppr.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.WR,]
 	dat$value =(round(base.rb - dat$Avg.Rank - WR.ADJUST, 1))
 	wr.dat = dat[,c(1,2,10)]
 	wr.dat$Position = 'WR'
 	
-	NUM.TE = 16
-		TOP.TE = 45
-	dat = read.delim('~/Downloads/te-trade-ppr.tsv', sep="\t")
+	NUM.TE = 17
+		TOP.TE = 39
+	dat = read.delim('~/Downloads/tetrade-ppr.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.TE,]
 	dat$value =(round(base.rb - dat$Avg.Rank, 1))
@@ -304,8 +306,8 @@ trade.value <- function() {
 	te.dat$value = te.dat$value*TOP.TE/NEW.TOP
 	te.dat$Position = 'TE'
 	
-	NUM.QB = 22
-		TOP.QB = 43
+	NUM.QB = 25
+		TOP.QB = 38
 	dat = read.delim('~/Downloads/qbtrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]
 	dat = dat[1: NUM.QB,]
@@ -317,12 +319,32 @@ trade.value <- function() {
 	qb.dat$value = qb.dat$value* TOP.QB/NEW.TOP
 	qb.dat$Position = 'QB'
 	
+	
 	dat = rbind(rb.dat, wr.dat, te.dat, qb.dat)
 	dat = dat[order(dat$value, decreasing=T),]
 	dat$value[dat$value<1]=1
-	dat$value = round(dat$value,0)
+	dat$value = round(dat$value,1)
 	colnames(dat) <- c('Player', 'Team', 'Value', 'Position')
+	dat$Value[dat$Player=='Josh Gordeon'] = 20
+	dat$Value[dat$Player=='Isaiah Crowell'] = 1
+	dat$Value[dat$Player=='Branden Oliver'] = 18
+	dat$exp.value = 1/(1+exp(-(dat$Value-dat$Value[1]*0.8)/10)) * 50
+	dat$exp.value <- round(dat$exp.value,1)
+	dat = dat[order(dat$Value, decreasing=T),]
 	dat
 	
-	write.table(dat, '~/projects/fftiers/tradevalue-ppr.tsv', row.names=FALSE, quote=F, sep='\t')
+	dat$Value = dat$exp.value; dat$exp.value <- NULL
+	pprdat=dat
+	pprdat$Team = pprdat$Position = NULL
+	colnames(pprdat)=c('Player','PPR')
+
+	foo = merge(stddat, pprdat, by='Player')	
+	
+	foo$Value[foo$Player=='C.J. Anderson'] = 3.3
+	foo$PPR[foo$Player=='C.J. Anderson'] = 6.0
+	foo = foo[foo$Player!='Nick Foles',]
+	
+	foo = foo[order(foo$Value, decreasing=T),]
+	
+	write.table(foo, '~/projects/fftiers/tradevalue-ppr.tsv', row.names=FALSE, quote=F, sep='\t')
 }
