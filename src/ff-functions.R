@@ -60,12 +60,14 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 		}
 	}
 	
+	comment2 <- function() {
 	for (i in (2):(nrow(this.pos)-1)) {
 		if (this.pos$mcluster[i-1] == this.pos$mcluster[i+1]) {
 			if (this.pos$mcluster[i] != this.pos$mcluster[i+1]) {
 				this.pos$mcluster[i] <- this.pos$mcluster[i+1]
 			}
 		}
+	}
 	}
 	
 	comment <- function() {
@@ -306,7 +308,7 @@ trade.value <- function() {
 	te.dat$value = te.dat$value*TOP.TE/NEW.TOP
 	te.dat$Position = 'TE'
 	
-	NUM.QB = 25
+	NUM.QB = 24
 		TOP.QB = 38
 	dat = read.delim('~/Downloads/qbtrade.tsv', sep="\t")
 	colnames(dat)[1:8] = colnames(dat)[2:9]

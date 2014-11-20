@@ -4,7 +4,7 @@ source('~/projects/fftiers/src/ff-functions.R')
 
 ### Parameters 
 
-thisweek = 11
+thisweek = 12
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
