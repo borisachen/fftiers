@@ -4,18 +4,22 @@ source('~/projects/fftiers/src/ff-functions.R')
 
 ### Parameters 
 
-thisweek = 12
+thisweek = 0
 download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
 ### Set and create input / output directories
 
 mkdir <- function(dir) system(paste("mkdir -p", dir))
-datdir = "~/projects/fftiers/dat/2014/"; mkdir(datdir)
+datdir = "~/projects/fftiers/dat/2015/"; mkdir(datdir)
 outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(outputdir)
 outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
 outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
 outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
+gd.outdir = "~/GoogleDrive/fftiers/out/"
+gd.outputdircsv = paste(gd.outdir, "/csv/", sep=""); mkdir(outputdircsv)
+gd.outputdirpng = paste(gd.outdir, "/png/", sep=""); mkdir(outputdirpng)
+gd.outputdirtxt = paste(gd.outdir, "/txt/", sep=""); mkdir(outputdirtxt)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
 
@@ -31,11 +35,12 @@ download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
 injured <- c('')
 
 ## Weekly
+source('~/projects/fftiers/src/ff-functions.R')
 draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 11, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 25, 7, XLOW=5)
-draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
+#draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
 draw.tiers("dst", 1, 26, 6, XLOW=5)
 
@@ -66,18 +71,17 @@ draw.tiers("ros-ppr-te", 1, 21, 6, XLOW=5)
 
 # PRESEASON
 COMMENT <- function() {
-draw.tiers("all", 1, 65, 13, XLOW=5, highcolor=720)
-draw.tiers("all", 66, 160, 9, adjust=13, XLOW=18, highcolor=540)
-draw.tiers("all", 1, 100, 20, XLOW=5, highcolor=720)
-draw.tiers("all", 1, 80, 11, XLOW=5, highcolor=720)
-draw.tiers("all", 41, 160, 7, adjust=10, XLOW=18, highcolor=720)
-draw.tiers("all", 93, 220, 4, adjust=16, XLOW=16, highcolor=500)
+source('~/projects/fftiers/src/ff-functions.R')
+injured <- c('')
+draw.tiers("all", 1, 68, 10, XLOW=5, highcolor=720)
+draw.tiers("all", 69, 141, 7, adjust=10, XLOW=18, highcolor=720)
+draw.tiers("all", 142, 210, 4, adjust=17, XLOW=20, highcolor=500)
 
 draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
 draw.tiers("all-ppr", 71, 140, 6, adjust=10, XLOW=16)
 draw.tiers("all-ppr", 141, 200, 5, adjust=16, XLOW=30)
 
-draw.tiers("all-half-ppr", 1, 70, 10, XLOW=5)
-draw.tiers("all-half-ppr", 71, 140, 6, adjust=10, XLOW=16)
-draw.tiers("all-half-ppr", 141, 200, 4, adjust=16, XLOW=30)
+draw.tiers("all-half-ppr", 1, 75, 10, XLOW=5)
+draw.tiers("all-half-ppr", 76, 143, 6, adjust=10, XLOW=20)
+draw.tiers("all-half-ppr", 144, 200, 4, adjust=16, XLOW=30)
 }

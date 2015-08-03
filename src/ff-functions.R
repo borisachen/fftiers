@@ -1,31 +1,30 @@
+year=2015
+
 
 download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
-if (download == TRUE) {
-  # download data for each position
-  for (mp in pos.list) {
- 	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2014/week-', thisweek, '-',mp,'-raw.xls', sep="")
-    system(curlstr); #Sys.sleep(3)
-    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-',mp,'-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', mp, '.tsv',sep="")
-    system(sedstr); #Sys.sleep(3)
-  }	  
+	if (download == TRUE) {
+	  # download data for each position
+	  for (mp in pos.list) {
+	 	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    system(curlstr); #Sys.sleep(3)
+	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-',mp,'-raw.xls', 
+	  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv',sep="")
+	    system(sedstr); #Sys.sleep(3)
+	  }	  
+	}
 }
-}
-
-
-
 
   # overall rankings download:
 download.predraft.data <- function() {
-  overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-raw.xls'
-  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-ppr-raw.xls'
-  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2014/week-0-all-half-ppr-raw.xls'
+  overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-raw.xls'
+  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-ppr-raw.xls'
+  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-half-ppr-raw.xls'
   system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
-  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all', '.tsv',sep="")
-  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2014/week-", thisweek, '-all-half-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2014/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all', '.tsv',sep="")
+  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-half-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
   system(sedstr);  
   system(sedstr2); system(sedstr3);
 }  
@@ -33,10 +32,11 @@ download.predraft.data <- function() {
 
 ### main plotting function
 
-error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360) {
+error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", sep="")
 	#if (tpos!='ALL') title = paste("Pre-draft - ",tpos," Tiers", sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", sep="")
+	if (thisweek==0) title = paste("2015 Draft - ",tpos," Tiers", sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
@@ -91,14 +91,12 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	}
 	
-	
-	
-	
-	
 	# Print out names
 	txt.path = paste(outputdirtxt,"text_",tpos,".txt",sep="")
+	gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,".txt",sep="")
 	if (file.exists(txt.path)) system(paste('rm', txt.path))
 	fileConn <- file(txt.path)
+	gd.fileConn <- file(gd.txt.path)
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')| (tpos == 'ALL-HALF-PPR')) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', adjust,".txt",sep=""))
 	tier.list = array("", k)
 	for (i in 1:k) {
@@ -111,6 +109,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       tier.list[i] = es
     }
     writeLines(tier.list, fileConn); close(fileConn)
+    writeLines(tier.list, gd.fileConn); close(gd.fileConn)
 	this.pos$nchar 	= nchar(as.character(this.pos$Player.Name))
 	this.pos$Tier 	= factor(this.pos$mcluster)
 	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
@@ -129,12 +128,10 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	
 	p = ggplot(this.pos, aes(x=position.rank, y=Avg.Rank))
 	p = p + ggtitle(title)
-    p = p + geom_errorbar(aes(ymin=Avg.Rank-Std.Dev/2, ymax= Avg.Rank + Std.Dev/2, 
-    		width=0.2, colour=Tier), size=barsize*0.8, alpha=0.4)
+    p = p + geom_errorbar(aes(ymin = Avg.Rank - Std.Dev/2, ymax = Avg.Rank + Std.Dev/2, width=0.2, colour=Tier), size=barsize*0.8, alpha=0.4)
 	p = p + geom_point(colour="grey20", size=dotsize) 
     p = p + coord_flip()
-    p = p + annotate("text", x = Inf, y = -Inf, label = "www.borischen.co", hjust=1.1, 
-    		vjust=-1.1, col="white", cex=6, fontface = "bold", alpha = 0.8)
+    p = p + annotate("text", x = Inf, y = -Inf, label = "www.borischen.co", hjust=1.1, vjust=-1.1, col="white", cex=6, fontface = "bold", alpha = 0.8)
 	if (tpos %in% bigfont)     			
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/6 - Std.Dev/1.4), size=font)
 	if (tpos %in% smfont)     			
@@ -150,13 +147,18 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	p = p + scale_colour_hue(l=55, h=c(0, highcolor))
     maxy = max( abs(this.pos$Avg.Rank)+this.pos$Std.Dev/2) 
     
-	if (tpos!='Flex') p = p + ylim(-5, maxy)
-    if ((tpos=="Flex") | (tpos=="PPR-FLEX") | (tpos=="HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
-    #p = p + ylim(0-XLOW, maxy)
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
+	if (tpos  != 'Flex') p = p + ylim(-5, maxy)
+    if ((tpos == "Flex") | (tpos=="PPR-FLEX")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
+	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
+
 	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
+		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".png", sep="")
+	}
 	
+
 	if (useold == TRUE) {
 		this.pos$position.rank = -this.pos$position.rank 
 		this.pos$Avg.Rank = -this.pos$Avg.Rank 
@@ -178,19 +180,25 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	# write the table to csv
 	outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos, ".csv", sep="")
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
+	gd.outfilecsv = paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
+		outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
+		gd.outfilecsv = paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
+	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 	write.csv(this.pos, outfilecsv)
+	write.csv(this.pos, gd.outfilecsv)
 	
     p
     ggsave(file=outfile, width=9.5, height=8, dpi=100)
+    ggsave(file=gd.outfile, width=9.5, height=8, dpi=100)
 	return(p)
 }
 
 ## Wrapper function around error.bar.plot
-draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360) {
+draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
-	if (thisweek != -10) colnames(dat) <- colnames(dat[2:ncol(dat)])
+	#if (pos != 'all') colnames(dat) <- colnames(dat[2:ncol(dat)])
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
 #	k = floor(high/4)

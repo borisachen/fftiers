@@ -1,5 +1,0 @@
-Tier 1: Detroit Lions
-Tier 2: Baltimore Ravens, Denver Broncos, Seattle Seahawks, Arizona Cardinals, Buffalo Bills, Houston Texans, New England Patriots
-Tier 3: San Francisco 49ers, Miami Dolphins, Cincinnati Bengals, Kansas City Chiefs, Indianapolis Colts
-Tier 4: Green Bay Packers, Philadelphia Eagles, San Diego Chargers, St. Louis Rams, Carolina Panthers, Chicago Bears, Minnesota Vikings, New York Giants, Dallas Cowboys
-Tier 5: New York Jets, Cleveland Browns, Tennessee Titans
