@@ -11,7 +11,7 @@ useold = FALSE		# Do we want to use the original version of the charts?
 ### Set and create input / output directories
 
 mkdir <- function(dir){
-	system(paste("mkdir -p", dir))}
+	system(paste("mkdir -p", dir))
 }
 datdir = "~/projects/fftiers/dat/2015/"; mkdir(datdir)
 outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(outputdir)
