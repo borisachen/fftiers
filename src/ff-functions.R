@@ -151,11 +151,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     if ((tpos == "Flex") | (tpos=="PPR-FLEX")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
-	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".pdf", sep="")
-	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".pdf", sep="")
+	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".jpg", sep="")
+	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".jpg", sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".pdf", sep="")
-		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".pdf", sep="")
+		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".jpg", sep="")
+		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".jpg", sep="")
 	}
 	
 
@@ -175,7 +175,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       p = p + scale_y_continuous("Average Rank")
       p = p + theme(legend.position="none") 
       p = p + scale_colour_hue(l=60, h=c(0, highcolor))
-      outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.pdf", sep="")
+      outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.jpg", sep="")
 	}
 
 	# write the table to csv
