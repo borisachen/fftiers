@@ -189,7 +189,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	write.csv(this.pos, outfilecsv)
 	#write.csv(this.pos, gd.outfilecsv)
 	
-    p
+    #p
     ggsave(file=outfile, width=9.5, height=8, dpi=100)
     #ggsave(file=gd.outfile, width=9.5, height=8, dpi=100)
 	return(p)
@@ -207,7 +207,7 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, STD.D
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
 	if (k > 15) highcolor <- 650
-	error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
+	p=error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
 }
 
 
