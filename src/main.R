@@ -24,11 +24,13 @@ gd.outputdirpng = paste(gd.outdir, "/png/", sep=""); mkdir(outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "/txt/", sep=""); mkdir(outputdirtxt)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
-
-download.data(c('qb','rb','wr','te'))
-download.data(c('flex','k','dst'))
-download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
-download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
+if (FALSE) {
+	download.data(c('qb','rb','wr','te'))
+	download.data(c('flex','k','dst'))
+	download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
+	download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
+	download.predraft.data()
+}
 
 if (FALSE) {
 	#download.data(c('ros-qb','ros-rb','ros-wr','ros-te'))
@@ -67,7 +69,6 @@ injured <- c('')
 # PRESEASON
 
 source('~/projects/fftiers/src/ff-functions.R')
-download.predraft.data()
 injured <- c('')
 
 draw.tiers("all", 1, 68, 10, XLOW=5, highcolor=720)
