@@ -5,8 +5,9 @@ source('~/projects/fftiers/src/ff-functions.R')
 ### Parameters 
 
 thisweek = 0
-download = FALSE		# Do we want to download fresh data from fantasypros?
+download = TRUE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
+year=2015
 
 ### Set and create input / output directories
 
@@ -24,7 +25,7 @@ gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
-if (TRUE) {
+if (download == TRUE) {
 	download.data(c('qb','rb','wr','te'))
 	download.data(c('flex','k','dst'))
 	download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
@@ -33,9 +34,9 @@ if (TRUE) {
 }
 
 if (FALSE) {
-	#download.data(c('ros-qb','ros-rb','ros-wr','ros-te'))
-	#download.data(c('ros-flex','ros-k','ros-dst'))
-	#download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
+	download.data(c('ros-qb','ros-rb','ros-wr','ros-te'))
+	download.data(c('ros-flex','ros-k','ros-dst'))
+	download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
 }
 
 ## If there are any injured players, list them here to remove them
@@ -61,8 +62,6 @@ draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
 draw.tiers("half-point-ppr-te", 1, 30, 7)
 #draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
-injured <- c('')
-
 
 # PRESEASON
 
@@ -82,15 +81,14 @@ draw.tiers("all-half-ppr", 76, 143, 6, adjust=10, XLOW=20)
 draw.tiers("all-half-ppr", 144, 200, 4, adjust=16, XLOW=30)
 
 
-comment <- function() {
-
-draw.tiers("ros-qb", 1, 32, 7, highcolor=360)
-draw.tiers("ros-rb", 1, 50, 12, highcolor=500)
-draw.tiers("ros-wr", 1, 64, 65/5, highcolor=550, XLOW=5)
-draw.tiers("ros-te", 1, 30, 7, XLOW=5)
-draw.tiers("ros-k", 1, 20, 5, XLOW=5)
-draw.tiers("ros-dst", 1, 25, 5, XLOW=5)
-draw.tiers("ros-ppr-rb", 1, 40, 10, highcolor=450)
-draw.tiers("ros-ppr-wr", 1, 60, 10, highcolor=400, XLOW=5)
-draw.tiers("ros-ppr-te", 1, 21, 6, XLOW=5)
+ros.comment <- function() {
+	draw.tiers("ros-qb", 1, 32, 7, highcolor=360)
+	draw.tiers("ros-rb", 1, 50, 12, highcolor=500)
+	draw.tiers("ros-wr", 1, 64, 65/5, highcolor=550, XLOW=5)
+	draw.tiers("ros-te", 1, 30, 7, XLOW=5)
+	draw.tiers("ros-k", 1, 20, 5, XLOW=5)
+	draw.tiers("ros-dst", 1, 25, 5, XLOW=5)
+	draw.tiers("ros-ppr-rb", 1, 40, 10, highcolor=450)
+	draw.tiers("ros-ppr-wr", 1, 60, 10, highcolor=400, XLOW=5)
+	draw.tiers("ros-ppr-te", 1, 21, 6, XLOW=5)
 }

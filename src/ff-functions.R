@@ -1,4 +1,3 @@
-year=2015
 
 
 download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
