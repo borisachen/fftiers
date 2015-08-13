@@ -33,10 +33,10 @@ download.predraft.data <- function() {
 ### main plotting function
 
 error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
-	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', as.character(Sys.time()), sep="")
-	#if (tpos!='ALL') title = paste("Pre-draft - ",tpos," Tiers", sep="")
-	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', as.character(Sys.time()), sep="")
-	if (thisweek==0) title = paste("2015 Draft - ",tpos," Tiers", ' - ', as.character(Sys.time()), sep="")
+	curr.time = as.character(format(Sys.time(), "%a %b %d %X %Y"))
+	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, sep="")
+	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
+	if (thisweek==0) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
