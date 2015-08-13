@@ -109,7 +109,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       tier.list[i] = es
     }
     writeLines(tier.list, fileConn); close(fileConn)
-    #writeLines(tier.list, gd.fileConn); close(gd.fileConn)
+    writeLines(tier.list, gd.fileConn); close(gd.fileConn)
+
 	this.pos$nchar 	= nchar(as.character(this.pos$Player.Name))
 	this.pos$Tier 	= factor(this.pos$mcluster)
 	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
@@ -151,11 +152,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     if ((tpos == "Flex") | (tpos=="PPR-FLEX")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
-	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".jpg", sep="")
-	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".jpg", sep="")
+	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
+	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".jpg", sep="")
-		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".jpg", sep="")
+		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".png", sep="")
 	}
 	
 
@@ -175,7 +176,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       p = p + scale_y_continuous("Average Rank")
       p = p + theme(legend.position="none") 
       p = p + scale_colour_hue(l=60, h=c(0, highcolor))
-      outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.jpg", sep="")
+      outfile = paste(outputdir, "week-", thisweek, "-", tpos, "-old.png", sep="")
 	}
 
 	# write the table to csv
@@ -187,11 +188,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 	write.csv(this.pos, outfilecsv)
-	#write.csv(this.pos, gd.outfilecsv)
+	write.csv(this.pos, gd.outfilecsv)
 	
     #p
     ggsave(file=outfile, width=9.5, height=8, dpi=100)
-    #ggsave(file=gd.outfile, width=9.5, height=8, dpi=100)
+    ggsave(file=gd.outfile, width=9.5, height=8, dpi=100)
 	return(p)
 }
 

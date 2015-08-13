@@ -18,7 +18,7 @@ outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(o
 outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
 outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
 outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
-gd.outdir = "~/GoogleDrive/fftiers/out/"
+gd.outdir = "~/projects/fftiers/out/current/"
 gd.outputdircsv = paste(gd.outdir, "/csv/", sep=""); mkdir(outputdircsv)
 gd.outputdirpng = paste(gd.outdir, "/png/", sep=""); mkdir(outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "/txt/", sep=""); mkdir(outputdirtxt)
