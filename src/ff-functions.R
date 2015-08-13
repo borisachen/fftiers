@@ -191,8 +191,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	write.csv(this.pos, gd.outfilecsv)
 	
     #p
-    ggsave(file=outfile, width=9.5, height=8, dpi=100)
-    ggsave(file=gd.outfile, width=9.5, height=8, dpi=100)
+    DPI=150
+    ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
+    ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
 	return(p)
 }
 
