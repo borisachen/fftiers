@@ -5,7 +5,7 @@ source('~/projects/fftiers/src/ff-functions.R')
 ### Parameters 
 
 thisweek = 0
-download = TRUE		# Do we want to download fresh data from fantasypros?
+download = FALSE		# Do we want to download fresh data from fantasypros?
 useold = FALSE		# Do we want to use the original version of the charts?
 
 ### Set and create input / output directories
@@ -18,10 +18,10 @@ outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(o
 outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
 outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
 outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
-gd.outdir = "~/projects/fftiers/out/current/"
-gd.outputdircsv = paste(gd.outdir, "/csv/", sep=""); mkdir(outputdircsv)
-gd.outputdirpng = paste(gd.outdir, "/png/", sep=""); mkdir(outputdirpng)
-gd.outputdirtxt = paste(gd.outdir, "/txt/", sep=""); mkdir(outputdirtxt)
+gd.outdir = "~/projects/fftiers/out/current/"; mkdir(gd.outdir)
+gd.outputdircsv = paste(gd.outdir, "csv/", sep=""); mkdir(gd.outputdircsv)
+gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
+gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
 if (TRUE) {

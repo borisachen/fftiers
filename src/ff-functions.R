@@ -33,10 +33,12 @@ download.predraft.data <- function() {
 ### main plotting function
 
 error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
-	curr.time = as.character(format(Sys.time(), "%a %b %d %X %Y"))
+	Sys.setenv(TZ='PST8PDT')
+	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if (thisweek==0) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2015 Draft - Top 200 Tiers", ' - ', curr.time, sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
@@ -105,6 +107,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	gd.fileConn <- file(gd.txt.path)
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')| (tpos == 'ALL-HALF-PPR')) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', adjust,".txt",sep=""))
 	tier.list = array("", k)
+	bad.rows = c()
 	for (i in 1:k) {
       foo <- this.pos[this.pos $cluster==i,]
       foo <- this.pos[this.pos $mcluster==i,]
@@ -113,14 +116,15 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       for (j in 1:nrow(foo)) es = paste(es,foo$Player.Name[j], ", ", sep="")
       es = substring(es, 1, nchar(es)-2)
       tier.list[i] = es
+      if (nrow(foo)==0) bad.rows = c(bad.rows, i)
     }
+    if (length(bad.rows)>0) tier.list = tier.list[-bad.rows]
     writeLines(tier.list, fileConn); close(fileConn)
     writeLines(tier.list, gd.fileConn); close(gd.fileConn)
 
 	this.pos$nchar 	= nchar(as.character(this.pos$Player.Name))
 	this.pos$Tier 	= factor(this.pos$mcluster)
 	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
-
 
 	bigfont			= c("QB","TE","K","DST", "PPR-TE", "ROS-TE","ROS-PPR-TE", "0.5 PPR-TE", "ROS-QB",'HALF-POINT-PPR-TE')
 	smfont			= c("RB", "PPR-RB", "ROS-RB","ROS-PPR-RB", "ROS-K", "ROS-DST", "0.5 PPR-RB", 'HALF-POINT-PPR-RB')
@@ -206,10 +210,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 ## Wrapper function around error.bar.plot
 draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
-	#if (pos != 'all') colnames(dat) <- colnames(dat[2:ncol(dat)])
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
-#	k = floor(high/4)
 	if (pos == "flex") tpos <- "Flex"
 	if (k <= 10) highcolor <- 360
 	if (k > 11) highcolor <- 450
