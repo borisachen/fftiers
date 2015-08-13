@@ -94,6 +94,12 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	# Print out names
 	txt.path = paste(outputdirtxt,"text_",tpos,".txt",sep="")
 	gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,".txt",sep="")
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
+		txt.path = paste(outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
+		gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
+	}
+	
+
 	if (file.exists(txt.path)) system(paste('rm', txt.path))
 	fileConn <- file(txt.path)
 	gd.fileConn <- file(gd.txt.path)
