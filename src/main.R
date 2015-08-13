@@ -24,7 +24,7 @@ gd.outputdirpng = paste(gd.outdir, "/png/", sep=""); mkdir(outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "/txt/", sep=""); mkdir(outputdirtxt)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
-if (FALSE) {
+if (TRUE) {
 	download.data(c('qb','rb','wr','te'))
 	download.data(c('flex','k','dst'))
 	download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
@@ -37,8 +37,6 @@ if (FALSE) {
 	#download.data(c('ros-flex','ros-k','ros-dst'))
 	#download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
 }
-
-download.predraft.data()
 
 ## If there are any injured players, list them here to remove them
 injured <- c('')
