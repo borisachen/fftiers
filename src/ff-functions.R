@@ -31,7 +31,8 @@ download.predraft.data <- function() {
 
 ### main plotting function
 
-error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
+error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, 
+	adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
 	Sys.setenv(TZ='PST8PDT')
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, sep="")
@@ -93,10 +94,10 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	
 	# Print out names
-	txt.path = paste(outputdirtxt,"text_",tpos,".txt",sep="")
+	txt.path 	= paste(outputdirtxt,"text_",tpos,".txt",sep="")
 	gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,".txt",sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		txt.path = paste(outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
+		txt.path 	= paste(outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
 		gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
 	}
 	
@@ -104,26 +105,27 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (file.exists(txt.path)) system(paste('rm', txt.path))
 	fileConn <- file(txt.path)
 	gd.fileConn <- file(gd.txt.path)
-	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')| (tpos == 'ALL-HALF-PPR')) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', adjust,".txt",sep=""))
+	if ((tpos == 'ALL') | (tpos == 'ALL-PPR')| (tpos == 'ALL-HALF-PPR')) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', num.higher.tiers,".txt",sep=""))
 	tier.list = array("", k)
 	bad.rows = c()
 	for (i in 1:k) {
       foo <- this.pos[this.pos $cluster==i,]
       foo <- this.pos[this.pos $mcluster==i,]
       es = paste("Tier ",i,": ",sep="")
-      if (adjust>0) es = paste("Tier ",i+adjust,": ",sep="")
+      if (num.higher.tiers>0) es = paste("Tier ",i+num.higher.tiers,": ",sep="")
       for (j in 1:nrow(foo)) es = paste(es,foo$Player.Name[j], ", ", sep="")
       es = substring(es, 1, nchar(es)-2)
       tier.list[i] = es
       if (nrow(foo)==0) bad.rows = c(bad.rows, i)
     }
     if (length(bad.rows)>0) tier.list = tier.list[-bad.rows]
+    num.tiers = length(tier.list)
     writeLines(tier.list, fileConn); close(fileConn)
     writeLines(tier.list, gd.fileConn); close(gd.fileConn)
 
 	this.pos$nchar 	= nchar(as.character(this.pos$Player.Name))
 	this.pos$Tier 	= factor(this.pos$mcluster)
-	if (adjust>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+adjust)
+	if (num.higher.tiers>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+num.higher.tiers)
 
 	bigfont			= c("QB","TE","K","DST", "PPR-TE", "ROS-TE","ROS-PPR-TE", "0.5 PPR-TE", "ROS-QB",'HALF-POINT-PPR-TE')
 	smfont			= c("RB", "PPR-RB", "ROS-RB","ROS-PPR-RB", "ROS-K", "ROS-DST", "0.5 PPR-RB", 'HALF-POINT-PPR-RB')
@@ -161,11 +163,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     if ((tpos == "Flex") | (tpos=="PPR-FLEX")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
-	outfile = paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
-	gd.outfile = paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
+	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
+	gd.outfile 	= paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		outfile = paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
-		gd.outfile = paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".png", sep="")
+		outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
+		gd.outfile 	= paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".png", sep="")
 	}
 	
 
@@ -192,22 +194,24 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos, ".csv", sep="")
 	gd.outfilecsv = paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
-		gd.outfilecsv = paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
+		outfilecsv 		= paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
+		gd.outfilecsv 	= paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 	write.csv(this.pos, outfilecsv)
-	write.csv(this.pos, gd.outfilecsv)
+
+	if (adjust <= 0) write.csv(this.pos, gd.outfilecsv, row.names=FALSE)
+	if (adjust >  0) write.table(this.pos, gd.outfilecsv, row.names=FALSE, append=TRUE, col.names=FALSE, sep=',')
 	
-    #p
+	#p
     DPI=150
     ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
     ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
-	return(p)
+	return(num.tiers)
 }
 
 ## Wrapper function around error.bar.plot
-draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, STD.DEV.SCALE=2) {
+draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
 	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
@@ -216,7 +220,9 @@ draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, STD.D
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
 	if (k > 15) highcolor <- 650
-	p=error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, adjust=adjust, XLOW=XLOW, highcolor=highcolor)
+	num.tiers=error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, 
+		adjust=adjust, XLOW=XLOW, highcolor=highcolor,num.higher.tiers=num.higher.tiers)
+	return(num.tiers)
 }
 
 
