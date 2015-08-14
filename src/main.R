@@ -10,13 +10,15 @@ if (length(args) != 1) {
 	print('Expected args format: Rscript main.R TRUE/FALSE')
 	stopifnot(FALSE)
 }
-download = as.character(args[1])
+download = toupper(as.character(args[1]))
+if (download=='T') download = TRUE
+if (download=='F') download = FALSE
 
-thisweek = 0
+thisweek 		= 0
+download.ros 	= FALSE
+useold 			= FALSE		# Do we want to use the original version of the charts?
+year			= 2015
 #download = FALSE		# Do we want to download fresh data from fantasypros?
-download.ros = FALSE
-useold = FALSE		# Do we want to use the original version of the charts?
-year=2015
 
 ### Set and create input / output directories
 
