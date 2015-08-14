@@ -4,8 +4,16 @@ source('~/projects/fftiers/src/ff-functions.R')
 
 ### Parameters 
 
+options(echo=TRUE)
+args 	<- commandArgs(trailingOnly = TRUE)
+if (length(args) != 1) {
+	print('Expected args format: Rscript main.R TRUE/FALSE')
+	stopifnot(FALSE)
+}
+download = as.character(args[1])
+
 thisweek = 0
-download = FALSE		# Do we want to download fresh data from fantasypros?
+#download = FALSE		# Do we want to download fresh data from fantasypros?
 download.ros = FALSE
 useold = FALSE		# Do we want to use the original version of the charts?
 year=2015
