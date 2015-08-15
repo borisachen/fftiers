@@ -50,6 +50,22 @@ if (download.ros == TRUE) {
 	download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
 }
 
+
+# PRESEASON
+injured <- c('')
+
+nt.std.1 = draw.tiers("all", 1, 69, 10, XLOW=5, highcolor=720)
+nt.std.2 = draw.tiers("all", 70, 143, 7, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=nt.std.1)
+nt.std.3 = draw.tiers("all", 144, 210, 4, adjust=2, XLOW=20, highcolor=500, num.higher.tiers=(nt.std.1+nt.std.2))
+
+nt.ppr.1 = draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
+nt.ppr.2 = draw.tiers("all-ppr", 71, 140, 6, adjust=1, XLOW=16, num.higher.tiers=nt.ppr.1)
+nt.ppr.3 = draw.tiers("all-ppr", 141, 200, 5, adjust=2, XLOW=30, num.higher.tiers=(nt.ppr.1+nt.ppr.2) )
+
+nt.halfppr.1 = draw.tiers("all-half-ppr", 1, 71, 8, XLOW=5)
+nt.halfppr.2 = draw.tiers("all-half-ppr", 72, 143, 6, adjust=1, XLOW=20, num.higher.tiers=nt.halfppr.1)
+nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.higher.tiers=(nt.halfppr.1+nt.halfppr.2) )
+
 ## If there are any injured players, list them here to remove them
 injured <- c('')
 
@@ -73,23 +89,6 @@ draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
 draw.tiers("half-point-ppr-te", 1, 30, 7)
 #draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
-
-# PRESEASON
-
-source('~/projects/fftiers/src/ff-functions.R')
-injured <- c('')
-
-nt.std.1 = draw.tiers("all", 1, 69, 10, XLOW=5, highcolor=720)
-nt.std.2 = draw.tiers("all", 70, 143, 7, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=nt.std.1)
-nt.std.3 = draw.tiers("all", 144, 210, 4, adjust=2, XLOW=20, highcolor=500, num.higher.tiers=(nt.std.1+nt.std.2))
-
-nt.ppr.1 = draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
-nt.ppr.2 = draw.tiers("all-ppr", 71, 140, 6, adjust=1, XLOW=16, num.higher.tiers=nt.ppr.1)
-nt.ppr.3 = draw.tiers("all-ppr", 141, 200, 5, adjust=2, XLOW=30, num.higher.tiers=(nt.ppr.1+nt.ppr.2) )
-
-nt.halfppr.1 = draw.tiers("all-half-ppr", 1, 71, 8, XLOW=5)
-nt.halfppr.2 = draw.tiers("all-half-ppr", 72, 143, 6, adjust=1, XLOW=20, num.higher.tiers=nt.halfppr.1)
-nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.higher.tiers=(nt.halfppr.1+nt.halfppr.2) )
 
 
 ros.comment <- function() {
