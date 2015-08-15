@@ -198,7 +198,24 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 		gd.outfilecsv 	= paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
-	write.csv(this.pos, outfilecsv)
+
+	#new.csv = this.pos[,c(1:2,11,4:10)]
+
+	new.csv = data.frame(Rank=this.pos$Rank,
+		Player.Name=this.pos$Player.Name,
+		Tier=this.pos$Tier)
+	if ("Position" %in% colnames(this.pos))
+		new.csv = cbind(new.csv, data.frame(Position=this.pos$Position))		
+	new.csv = cbind(new.csv, data.frame(
+		Team=this.pos$Team,
+		Avg.Rank=round(this.pos$Avg.Rank,2),
+		Std.Dev=round(this.pos$Std.Dev,2),
+		ADP=this.pos$ADP,
+		Best.Rank=this.pos$Best.Rank,
+		Worst.Rank=this.pos$Worst.Rank,
+		Bye.Week=this.pos$Bye.Week))
+	#write.csv(this.pos, outfilecsv)
+	write.csv(new.csv, outfilecsv)
 
 	if (adjust <= 0) write.csv(this.pos, gd.outfilecsv, row.names=FALSE)
 	if (adjust >  0) write.table(this.pos, gd.outfilecsv, row.names=FALSE, append=TRUE, col.names=FALSE, sep=',')
