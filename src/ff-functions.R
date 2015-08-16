@@ -201,7 +201,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	#new.csv = this.pos[,c(1:2,11,4:10)]
 	if ((tpos == 'ALL') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) {
-		this.pos = this.pos[,c(1:2,11,4:10)]
+		this.pos = this.pos[,c(1:2,11,3:10)]
 	}
 	write.csv(this.pos, outfilecsv)
 	#write.csv(new.csv, outfilecsv)
