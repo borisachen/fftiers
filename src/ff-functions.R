@@ -35,10 +35,10 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
 	Sys.setenv(TZ='PST8PDT')
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
-	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, sep="")
+	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2015 Draft - Top 200 Tiers", ' - ', curr.time, sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2015 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
