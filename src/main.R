@@ -14,7 +14,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 0
+thisweek 		= 1
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2015
@@ -54,8 +54,8 @@ if (download.ros == TRUE) {
 # PRESEASON
 
 ## If there are any injured players, list them here to remove them
-injured <- c('Kelvin Benjamin','Kevin White')
-
+injured <- c('')
+comment <- function() {
 nt.std.1 = draw.tiers("all", 1, 69, 10, XLOW=5, highcolor=720)
 nt.std.2 = draw.tiers("all", 70, 143, 7, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=nt.std.1)
 nt.std.3 = draw.tiers("all", 144, 210, 4, adjust=2, XLOW=20, highcolor=500, num.higher.tiers=(nt.std.1+nt.std.2))
@@ -67,29 +67,28 @@ nt.ppr.3 = draw.tiers("all-ppr", 141, 200, 5, adjust=2, XLOW=35, num.higher.tier
 nt.halfppr.1 = draw.tiers("all-half-ppr", 1, 71, 10, XLOW=5)
 nt.halfppr.2 = draw.tiers("all-half-ppr", 72, 143, 6, adjust=1, XLOW=20, num.higher.tiers=nt.halfppr.1)
 nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.higher.tiers=(nt.halfppr.1+nt.halfppr.2) )
-
+}
 
 
 
 ## Weekly
-source('~/projects/fftiers/src/ff-functions.R')
 draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 11, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
-#draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
 draw.tiers("dst", 1, 26, 6, XLOW=5)
 
 draw.tiers("ppr-rb", 1, 40, 11)
 draw.tiers("ppr-wr", 1, 60, 9, highcolor=500)
 draw.tiers("ppr-te", 1, 30, 8)
-#draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
 
 draw.tiers("half-point-ppr-rb", 1, 40, 9)
 draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
 draw.tiers("half-point-ppr-te", 1, 30, 7)
-#draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
+draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
 
 

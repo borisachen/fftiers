@@ -4,8 +4,11 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
-	 	curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
 	    system(curlstr); #Sys.sleep(3)
+
 	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-',mp,'-raw.xls', 
 	  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv',sep="")
 	    system(sedstr); #Sys.sleep(3)
@@ -218,7 +221,27 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 ## Wrapper function around error.bar.plot
 draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
-	dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
+	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
+	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
+	if (!IS.FLEX) {
+		dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
+		colnames(dat)[1:7]=colnames(dat)[2:8]
+		dat=dat[,c(1:7)]
+		dat$Rank=1:nrow(dat)
+		
+	}
+	if ( IS.FLEX ) {
+		dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
+		colnames(dat)= c("Rank","Player.Name" ,'pos',"Team","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev","X")
+		dat=dat[2:nrow(dat),]
+	}
+	if (thisweek>0) { 
+		dat$Rank = as.numeric(as.character(dat$Rank))
+		dat$Best.Rank = as.numeric(as.character(dat$Best.Rank))
+		dat$Worst.Rank = as.numeric(as.character(dat$Worst.Rank))
+		dat$Avg.Rank = as.numeric(as.character(dat$Avg.Rank))
+		dat$Std.Dev = as.numeric(as.character(dat$Std.Dev))
+	}
  	dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
 	if (pos == "flex") tpos <- "Flex"
