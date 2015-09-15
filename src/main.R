@@ -14,7 +14,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 1
+thisweek 		= 2
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2015
@@ -74,7 +74,7 @@ nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.hi
 ## Weekly
 draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
-draw.tiers("wr", 1, 60, 11, highcolor=500, XLOW=5)
+draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
 draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
