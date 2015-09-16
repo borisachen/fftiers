@@ -80,8 +80,8 @@ draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 26, 5, XLOW=5)
 draw.tiers("dst", 1, 26, 6, XLOW=5)
 
-draw.tiers("ppr-rb", 1, 40, 11)
-draw.tiers("ppr-wr", 1, 60, 9, highcolor=500)
+draw.tiers("ppr-rb", 1, 40, 10)
+draw.tiers("ppr-wr", 1, 60, 12, highcolor=500)
 draw.tiers("ppr-te", 1, 30, 8)
 draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
 
