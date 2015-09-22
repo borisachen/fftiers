@@ -14,7 +14,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 2
+thisweek 		= 3
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2015
@@ -77,17 +77,17 @@ draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
 draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
-draw.tiers("k", 1, 26, 5, XLOW=5)
-draw.tiers("dst", 1, 26, 6, XLOW=5)
+draw.tiers("k", 1, 24, 5, XLOW=5)
+draw.tiers("dst", 1, 25, 6, XLOW=5)
 
 draw.tiers("ppr-rb", 1, 40, 10)
 draw.tiers("ppr-wr", 1, 60, 12, highcolor=500)
-draw.tiers("ppr-te", 1, 30, 8)
+draw.tiers("ppr-te", 1, 29, 8)
 draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
 
 draw.tiers("half-point-ppr-rb", 1, 40, 9)
 draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
-draw.tiers("half-point-ppr-te", 1, 30, 7)
+draw.tiers("half-point-ppr-te", 1, 29, 7)
 draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
 

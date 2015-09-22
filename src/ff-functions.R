@@ -6,6 +6,8 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
 	  for (mp in pos.list) {
 	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2015&export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2015'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
 	    system(curlstr); #Sys.sleep(3)
 
