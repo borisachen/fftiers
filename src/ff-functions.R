@@ -1,6 +1,6 @@
 
 
-download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
+download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=FALSE ) {
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
@@ -9,11 +9,16 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst') ) {
 	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2015&export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2015'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
-	    system(curlstr); #Sys.sleep(3)
-
+	    if (dfs==FALSE)
+	    	system(curlstr); 
 	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-',mp,'-raw.xls', 
 	  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv',sep="")
-	    system(sedstr); #Sys.sleep(3)
+	    if (dfs==TRUE) {
+	    	localfpdir= paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep='')
+	    	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2015_Week_',thisweek,'_',mp,'_Rankings.xls', 
+	  			  ' > ', localfpdir, mp, '.tsv',sep="")	
+	    }
+	    system(sedstr); 
 	  }	  
 	}
 }
@@ -222,18 +227,25 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 }
 
 ## Wrapper function around error.bar.plot
-draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
+draw.tiers <- function(pos, low, high, k, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
 	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
 	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
 	if (!IS.FLEX) {
-		dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t")
+		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
+		if (dfs==TRUE) {
+			localfpdir= paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep='')
+	    	tsvpath = paste(localfpdir, toupper(pos), '.tsv',sep="")
+		}
+		dat = read.delim(tsvpath, sep="\t")
 		colnames(dat)[1:7]=colnames(dat)[2:8]
 		dat=dat[,c(1:7)]
 		dat$Rank=1:nrow(dat)
 		
 	}
 	if ( IS.FLEX ) {
-		dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
+		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
+		if (dfs==TRUE) tsvpath = paste(paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep=''), toupper(pos), '.tsv',sep="")
+		dat = read.delim(tsvpath, sep="\t", header=FALSE)
 		colnames(dat)= c("Rank","Player.Name" ,'pos',"Team","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev","X")
 		dat=dat[2:nrow(dat),]
 	}
