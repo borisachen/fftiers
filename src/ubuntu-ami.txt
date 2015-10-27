@@ -20,8 +20,8 @@ sudo make install
 
 
 R
-install.packages('mclust')
-install.packages('plyr')
-install.packages('reshape2')
-install.packages('scales')
+install.packages('mclust', dep = TRUE)
+install.packages('plyr', dep = TRUE)
+install.packages('reshape2', dep = TRUE)
+install.packages('scales', dep = TRUE)
 install.packages('ggplot2', dep = TRUE)
