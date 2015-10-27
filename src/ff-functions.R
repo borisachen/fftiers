@@ -2,17 +2,17 @@
 
 download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=FALSE ) {
 	if (download == TRUE) {
-	  rmold1 = paste('rm ~/projects/fftiers/dat/2015/week-', thisweek, ' *', sep='')
-	  rmold2 = paste('rm ~/projects/fftiers/dat/2015/week_', thisweek, ' *', sep='')
-	  system(rmold1)
-	  system(rmold2)
 	  # download data for each position
 	  for (mp in pos.list) {
 	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	 	rmold1 = paste('rm ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep='')
+	  	system(rmold1)
 	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2015&export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2015'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
+		rmold2 = paste('rm ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv', sep='')
+	  	system(rmold2)
 	    if (dfs==FALSE)
 	    	system(curlstr); 
 	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-',mp,'-raw.xls', 
