@@ -18,7 +18,7 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	    	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2015_Week_',thisweek,'_',mp,'_Rankings.xls', 
 	  			  ' > ', localfpdir, mp, '.tsv',sep="")	
 	    }
-	    system(sedstr); 
+	    system(sedstr);  
 	  }	  
 	}
 }
