@@ -34,9 +34,9 @@ gd.outdir = "~/projects/fftiers/out/current/"; mkdir(gd.outdir)
 gd.outputdircsv = paste(gd.outdir, "csv/", sep=""); mkdir(gd.outputdircsv)
 gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
-system(paste('rm ', gd.outdircsv, '*', sep=''))
-system(paste('rm ', gd.outdirpng, '*', sep=''))
-system(paste('rm ', gd.outdirtxt, '*', sep=''))
+system(paste('rm ', gd.outputdircsv, '*', sep=''))
+system(paste('rm ', gd.outputdirpng, '*', sep=''))
+system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
