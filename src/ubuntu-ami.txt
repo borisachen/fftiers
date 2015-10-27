@@ -3,16 +3,19 @@ sudo apt-get install git
 sudo apt-get install build-essential
 sudo apt-get install fort77
 
-
 sudo apt-get install apt-file
 apt-file update
 sudo apt-get install libreadline-dev
 sudo apt-get build-dep r-base
 
+sudo apt-get install python-pip
+sudo pip install awscli
+
 
 wget http://cran.r-project.org/src/base/R-3/R-3.1.0.tar.gz
 tar zxf R-3.1.0.tar.gz && cd R-3.1.0
 ./configure 
+make
 sudo make install
 
 
@@ -21,7 +24,4 @@ install.packages('mclust')
 install.packages('plyr')
 install.packages('reshape2')
 install.packages('scales')
-install.packages('ggplot2')
-
-sudo apt-get install python-pip
-sudo pip install awscli
+install.packages('ggplot2', dep = TRUE)
