@@ -22,7 +22,7 @@ year			= 2015
 
 ### Set and create input / output directories
 
-mkdir <- function(dir){
+mkdir <- function(dir){ 
 	system(paste("mkdir -p", dir))
 }
 datdir = "~/projects/fftiers/dat/2015/"; mkdir(datdir)
