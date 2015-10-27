@@ -35,7 +35,7 @@ gd.outputdircsv = paste(gd.outdir, "csv/", sep=""); mkdir(gd.outputdircsv)
 gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
 
-rmstr1 = paste('rm -r ', gd.outdir, '*' sep='')
+rmstr1 = paste('rm -r ', gd.outdir, '*', sep='')
 system(rmstr1)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
