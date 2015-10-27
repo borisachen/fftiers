@@ -30,13 +30,14 @@ outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(o
 outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
 outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
 outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
-gd.outdir = "~/projects/fftiers/out/current/"; mkdir(gd.outdir)
+gd.outdir = "~/projects/fftiers/out/current/"; 
+rmstr1 = paste('rm -r ', gd.outdir, '*', sep='')
+system(rmstr1)
+mkdir(gd.outdir)
 gd.outputdircsv = paste(gd.outdir, "csv/", sep=""); mkdir(gd.outputdircsv)
 gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
 gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
 
-rmstr1 = paste('rm -r ', gd.outdir, '*', sep='')
-system(rmstr1)
 
 ### Curl data from fantasypros. Which positions do we want to fetch?
 if (download == TRUE) {
