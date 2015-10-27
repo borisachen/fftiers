@@ -2,6 +2,10 @@
 
 download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=FALSE ) {
 	if (download == TRUE) {
+	  rmold1 = paste('rm ~/projects/fftiers/dat/2015/week-', thisweek, ' *', sep='')
+	  rmold2 = paste('rm ~/projects/fftiers/dat/2015/week_', thisweek, ' *', sep='')
+	  system(rmold1)
+	  system(rmold2)
 	  # download data for each position
 	  for (mp in pos.list) {
 	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
