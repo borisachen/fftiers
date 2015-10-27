@@ -73,7 +73,7 @@ nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.hi
 
 ## Weekly
 draw.tiers("qb", 1, 24, 8, highcolor=360)
-draw.tiers("rb", 1, 40, 9, highcolor=400)
+draw.tiers("rb", 1, 40, 10, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
 draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
