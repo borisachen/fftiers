@@ -14,7 +14,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 8
+thisweek 		= 9
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2015
@@ -45,7 +45,7 @@ if (download == TRUE) {
 	download.data(c('flex','k','dst'))
 	download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
 	download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
-	download.predraft.data()
+	#download.predraft.data()
 }
 
 if (download.ros == TRUE) {

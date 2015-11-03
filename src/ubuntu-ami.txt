@@ -25,3 +25,6 @@ install.packages('plyr', dep = TRUE)
 install.packages('reshape2', dep = TRUE)
 install.packages('scales', dep = TRUE)
 install.packages('ggplot2', dep = TRUE)
+
+##### 
+aws configure
