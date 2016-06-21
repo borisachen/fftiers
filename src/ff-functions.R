@@ -4,22 +4,22 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
-	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
-	 	rmold1 = paste('rm ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep='')
+	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	  	system(rmold1)
-	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
-	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2015&export=xls > ~/projects/fftiers/dat/2015/week-', thisweek, '-',mp,'-raw.xls', sep="")
-	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2015'
+	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2016&export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2016'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
-		rmold2 = paste('rm ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv', sep='')
+		rmold2 = paste('rm ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv', sep='')
 	  	system(rmold2)
 	    if (dfs==FALSE)
 	    	system(curlstr); 
-	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-',mp,'-raw.xls', 
-	  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', mp, '.tsv',sep="")
+	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-',mp,'-raw.xls', 
+	  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv',sep="")
 	    if (dfs==TRUE) {
 	    	localfpdir= paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep='')
-	    	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2015_Week_',thisweek,'_',mp,'_Rankings.xls', 
+	    	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2016_Week_',thisweek,'_',mp,'_Rankings.xls', 
 	  			  ' > ', localfpdir, mp, '.tsv',sep="")	
 	    }
 	    system(sedstr);  
@@ -29,15 +29,15 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 
   # overall rankings download:
 download.predraft.data <- function() {
-  overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-raw.xls'
-  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-ppr-raw.xls'
-  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2015/week-0-all-half-ppr-raw.xls'
+  overall.url = 'curl http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-raw.xls'
+  ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-ppr-raw.xls'
+  half.ppr.url = 'curl http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-half-ppr-raw.xls'
   system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
-  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all', '.tsv',sep="")
-  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2015/week-", thisweek, '-all-half-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2015/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all', '.tsv',sep="")
+  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-half-ppr-raw.xls', 
+  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
   system(sedstr);  
   system(sedstr2); system(sedstr3);
 }  
@@ -51,8 +51,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2015 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2015 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2016 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2016 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
