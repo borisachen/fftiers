@@ -40,72 +40,49 @@ system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 injured <- c('')
 
 ### Predraft data
-download.predraft.data()
-high.level.tiers = draw.tiers("all", 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers("all", 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
-nt.std.2 = draw.tiers("all", high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-nt.std.3 = draw.tiers("all", high.level.tiers[2]+1, high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+if (download == TRUE) download.predraft.data()
 
-high.level.tiers = draw.tiers("all-ppr", 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers("all-ppr", 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
-nt.std.2 = draw.tiers("all-ppr", high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-nt.std.3 = draw.tiers("all-ppr", high.level.tiers[2]+1, high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
+for (scoring.type in scoring.type.list) {
+	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
+	nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
+	nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
+	nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+}
 
-high.level.tiers = draw.tiers("all-half-ppr", 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers("all-half-ppr", 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
-nt.std.2 = draw.tiers("all-half-ppr", high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-nt.std.3 = draw.tiers("all-half-ppr", high.level.tiers[2]+1, high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
-
-
-### Curl data from fantasypros. Which positions do we want to fetch?
+### Curl data from fantasypros. 
 if (download == TRUE) {
 	download.data(c('qb','rb','wr','te'))
 	download.data(c('flex','k','dst'))
 	download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
 	download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
-	#download.predraft.data()
 }
+
+## Weekly
+draw.tiers("qb", 1, 24, 8, highcolor=360)
+draw.tiers("rb", 1, 40, 9, highcolor=400)
+draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
+draw.tiers("te", 1, 24, 8, XLOW=5)
+#draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("k", 1, 24, 5, XLOW=5)
+draw.tiers("dst", 1, 24, 6, XLOW=5)
+
+draw.tiers("ppr-rb", 1, 40, 10)
+draw.tiers("ppr-wr", 1, 60, 12, highcolor=500)
+draw.tiers("ppr-te", 1, 29, 8)
+#draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
+
+draw.tiers("half-point-ppr-rb", 1, 40, 9)
+draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
+draw.tiers("half-point-ppr-te", 1, 29, 7)
+#draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
+
+
+
 if (download.ros == TRUE) {
 	download.data(c('ros-qb','ros-rb','ros-wr','ros-te'))
 	download.data(c('ros-flex','ros-k','ros-dst'))
 	download.data(c('ros-ppr-rb','ros-ppr-wr','ros-ppr-te','ros-ppr-flex'))
-}
-
-
-# PRESEASON 2015
-preseason.2015.comment <- function() {
-	nt.std.1 = draw.tiers("all", 1, 69, 10, XLOW=5, highcolor=720)
-	nt.std.2 = draw.tiers("all", 70, 143, 7, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=nt.std.1)
-	nt.std.3 = draw.tiers("all", 144, 210, 4, adjust=2, XLOW=20, highcolor=500, num.higher.tiers=(nt.std.1+nt.std.2))
-
-	nt.ppr.1 = draw.tiers("all-ppr", 1, 70, 10, XLOW=5)
-	nt.ppr.2 = draw.tiers("all-ppr", 71, 140, 6, adjust=1, XLOW=16, num.higher.tiers=nt.ppr.1)
-	nt.ppr.3 = draw.tiers("all-ppr", 141, 200, 5, adjust=2, XLOW=35, num.higher.tiers=(nt.ppr.1+nt.ppr.2) )
-
-	nt.halfppr.1 = draw.tiers("all-half-ppr", 1, 71, 10, XLOW=5)
-	nt.halfppr.2 = draw.tiers("all-half-ppr", 72, 143, 6, adjust=1, XLOW=20, num.higher.tiers=nt.halfppr.1)
-	nt.halfppr.3 = draw.tiers("all-half-ppr", 144, 200, 4, adjust=2, XLOW=30, num.higher.tiers=(nt.halfppr.1+nt.halfppr.2) )
-}
-
-## Weekly
-weekly.comment <- function() {
-	draw.tiers("qb", 1, 24, 8, highcolor=360)
-	draw.tiers("rb", 1, 40, 9, highcolor=400)
-	draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
-	draw.tiers("te", 1, 24, 8, XLOW=5)
-	draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
-	draw.tiers("k", 1, 24, 5, XLOW=5)
-	draw.tiers("dst", 1, 24, 6, XLOW=5)
-
-	draw.tiers("ppr-rb", 1, 40, 10)
-	draw.tiers("ppr-wr", 1, 60, 12, highcolor=500)
-	draw.tiers("ppr-te", 1, 29, 8)
-	draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
-
-	draw.tiers("half-point-ppr-rb", 1, 40, 9)
-	draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
-	draw.tiers("half-point-ppr-te", 1, 29, 7)
-	draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 }
 
 ros.comment <- function() {

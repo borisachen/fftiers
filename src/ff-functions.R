@@ -8,6 +8,7 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	  	system(rmold1)
 	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    curlstr = paste('curl https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2016&export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2016'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
@@ -206,9 +207,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 
-	#if (is.tpos.all(tpos)) {
-	#	this.pos = this.pos[,c(1:2,11,3:10)]
-	#}
+	if (is.tpos.all(tpos)) { # Reorder for online spreadsheet
+		this.pos = this.pos[,c(1:2,10,3:9)]
+	}
 	write.csv(this.pos, outfilecsv)
 
 	if (adjust <= 0) write.csv(  this.pos, gd.outfilecsv, row.names=FALSE)
@@ -218,7 +219,6 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
     ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
 
-    print(this.pos$Tier)
 	if (is.tpos.all(tpos)) {
 		val = c()
 		for (i in min(as.numeric(levels(factor(this.pos$Tier)))):max(as.numeric(levels(factor(this.pos$Tier)))))  {
