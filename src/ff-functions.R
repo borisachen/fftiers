@@ -7,22 +7,35 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	  	system(rmold1)
-	    curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
-	    curlstr = paste('curl https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	  	# "curl --user user:pass --cookie-jar ./somefile https://xyz.com/a"
+	  	# curl --cookie ./somefile https://xyz.com/b
+		## Manually try to curl w/cookies?
+		#curl --user borischen003:borischen1 --cookie-jar ~/projects/fftiers/fplogin.txt https://secure.fantasypros.com/accounts/login/?
+		#curl --cookie ~/projects/fftiers/fplogin.txt https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls
+		#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    #curlstr = paste('curl https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    
+	    #scratch = 'python /Users/borischen/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /Users/borischen/projects/fftiers/dat/2016/week-0-all-raw.xls'
+		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls', sep='')
+	    dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+		dl_call = paste('python /Users/borischen/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+		system(dl_call)
+
+		#curlstr = paste('curl https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',as.character(thisweek),'&year=2016&export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    #'http://www.fantasypros.com/nfl/rankings/rb.php?week=3&year=2016'
 	    #http://www.fantasypros.com/nfl/rankings/qb.php?export=xls
 		rmold2 = paste('rm ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv', sep='')
 	  	system(rmold2)
-	    if (dfs==FALSE)
-	    	system(curlstr); 
+	    #if (dfs==FALSE)
+	    #	system(curlstr); 
 	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-',mp,'-raw.xls', 
 	  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv',sep="")
-	    if (dfs==TRUE) {
-	    	localfpdir= paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep='')
-	    	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2016_Week_',thisweek,'_',mp,'_Rankings.xls', 
-	  			  ' > ', localfpdir, mp, '.tsv',sep="")	
-	    }
+	    #if (dfs==TRUE) {
+	   	# 	localfpdir= paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep='')
+	    #	sedstr = paste("sed '1,4d' ",localfpdir,'FantasyPros_2016_Week_',thisweek,'_',mp,'_Rankings.xls', 
+	  	#		  ' > ', localfpdir, mp, '.tsv',sep="")	
+	    #}
 	    system(sedstr);  
 	  }	  
 	}
@@ -30,17 +43,40 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 
   # overall rankings download:
 download.predraft.data <- function() {
-  overall.url = 'curl https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-raw.xls'
-  ppr.url = 'curl https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-ppr-raw.xls'
-  half.ppr.url = 'curl https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-half-ppr-raw.xls'
-  system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
-  sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-raw.xls', ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all', '.tsv',sep="")
-  sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-  sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-half-ppr-raw.xls', 
-  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
-  system(sedstr);  
-  system(sedstr2); system(sedstr3);
+
+	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls', sep='')
+	#dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	#dl_call = paste('python /Users/borischen/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	#system(dl_call)
+	
+	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls'
+	dest = '~/projects/fftiers/dat/2016/week-0-all-raw.xls'
+	dl_call = paste('python /Users/borischen/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	system(dl_call)
+
+	url = 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls'
+	dest = '~/projects/fftiers/dat/2016/week-0-all-ppr-raw.xls'
+	dl_call = paste('python /Users/borischen/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	system(dl_call)
+
+	url = 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls'
+	dest = '~/projects/fftiers/dat/2016/week-0-all-half-ppr-raw.xls'
+	dl_call = paste('python /Users/borischen/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	system(dl_call)
+
+	#overall.url = 'curl https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-raw.xls'
+	#ppr.url = 'curl https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-ppr-raw.xls'
+	#half.ppr.url = 'curl https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-0-all-half-ppr-raw.xls'
+	#system(overall.url); Sys.sleep(0.5); system(ppr.url); Sys.sleep(0.5); system(half.ppr.url); Sys.sleep(0.5)
+	sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-raw.xls', 
+				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all', '.tsv',sep="")
+	sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-ppr-raw.xls', 
+				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+	sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-half-ppr-raw.xls', 
+				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+	system(sedstr);  
+	system(sedstr2); 
+	system(sedstr3);
 }  
 
 is.tpos.all <- function(tpos) {
