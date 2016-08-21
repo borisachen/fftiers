@@ -1,0 +1,155 @@
+sudo yum -y install make libX11-devel.* libICE-devel.* libSM-devel.* libdmx-devel.* libx* xorg-x11* libFS* 
+wget http://cran.r-project.org/src/base/R-3/R-3.1.0.tar.gz
+tar zxf R-3.1.0.tar.gz && cd R-3.1.0
+sudo apt-get install make
+./configure --with-readline=no --with-x=no
+make
+sudo make install
+
+R
+install.packages('mclust')
+install.packages('plyr')
+install.packages('reshape2')
+install.packages('scales')
+install.packages('ggplot2')
+
+wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+tar zxf ImageMagick.tar.gz
+cd ImageMagick-6.9.1-10
+ ./configure
+ make
+
+
+wget https://cran.r-project.org/src/contrib/cairoDevice_2.22.tar.gz
+R
+install.packages('/home/ec2-user/cairoDevice_2.22.tar.gz', repos = NULL, type="source")
+
+
+wget https://cran.r-project.org/src/contrib/RGtk2_2.20.31.tar.gz
+R CMD INSTALL RGtk2_2.20.31.tar.gz
+
+wget http://ftp.gnome.org/pub/gnome/sources/gtk+/2.8/gtk+-2.8.0.tar.gz
+tar zxf gtk+-2.8.0.tar.gz
+cd gtk+-2.8.0
+./configure --prefix=/opt/gtk
+
+
+wget http://ftp.gnome.org/pub/gnome/sources/gtk+/2.0/gtk+-2.0.0.tar.gz
+tar zxf gtk+-2.0.0.tar.gz
+cd gtk+-2.0.0
+./configure
+
+wget http://ftp.gnome.org/pub/gnome/sources/glib/2.0/glib-2.0.0.tar.gz
+tar zxf glib-2.0.0.tar.gz
+cd glib-2.0.0
+./configure
+make
+sudo make install
+export PKG_CONFIG_PATH=/home/ec2-user/glib-2.0.0
+
+wget ftp://ftp.gnome.org/pub/gnome/sources/atk/1.0/atk-1.0.0.tar.gz
+tar zxf atk-1.0.0.tar.gz
+./configure
+
+
+sudo apt-get install libxml2-dev libxslt1-dev python-dev
+sudo pip install lxml
+sudo pip install certifi
+sudo pip install pyopenssl ndg-httpsclient pyasn1
+
+
+
+convert           \
+   -verbose       \
+   -density 150   \
+   -trim          \
+    week-0-K.pdf      \
+   -quality 100   \
+   -sharpen 0x1.0 \
+    24-18.jpg
+
+
+history:
+
+  473  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  474  pip install lxml
+  475  pip install libxml2
+  476  pip install lxml
+  477  pip install libxml2
+  478  python
+  479  ls
+  480  pwd
+  481  pip install
+  482  brew install libxml2
+  483  pip install libxml2
+  484  easy install libxml2
+  485  apt-get install libxml2-dev libxslt1-dev python-dev
+  486  sud oapt-get install libxml2-dev libxslt1-dev python-dev
+  487  sudo apt-get install libxml2-dev libxslt1-dev python-dev
+  488  apt-get install python-lxml
+  489  sudo apt-get install python-lxml
+  490  sudo apt-get install python-dev
+  491  sudo apt-get install libxml2-dev
+  492  sudo apt-get install python3-lxml
+  493  sudo apt-get install python-lxml
+  494  pip install lxml
+  495  pip install libxml2
+  496  apt-get install libxml2-dev libxslt1-dev python-dev
+  497  sudo apt-get install libxml2-dev libxslt1-dev python-dev
+  498  sudo apt-get update
+  499  sudo apt-get install libxml2-dev libxslt1-dev python-dev
+  500  pip install lxml
+  501  sudo pip install lxml
+  502  git pull origin master
+  503  ls
+  504  Rscript main.R
+  505  Rscript main.R T
+  506  pwd
+  507  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  508  brew status
+  509  brew update
+  510  pip install -U requests[security]
+  511  pip install -U requests[security] --update
+  512  pip install -U requests[security] -update
+  513  pip install -U requests[security]
+  514  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  515  apt-get autoremove && apt-get autoclean
+  516  sudo apt-get autoremove && apt-get autoclean
+  517  wget https://www.openssl.org/source/openssl-1.0.1g.tar.gz
+  518  ls
+  519  ls -ltr
+  520  tar -zxvf openssl-1.0.1g.tar.gz 
+  521  ls
+  522  ls -ltr
+  523  openssl-1.0.1g/
+  524  ls
+  525  cd openssl-1.0.1g/
+  526  ls
+  527  ls -ltr
+  528  cat README
+  529  less README
+  530  less INSTALL
+  531  ./config
+  532  less INSTALL
+  533  make
+  534  make test
+  535  less INSTALL
+  536  make install
+  537  sudo make install
+  538  cd ..
+  539  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  540  python -c "import certifi; print certifi.old_where()"
+  541  pip install certifi
+  542  sudo pip install certifi
+  543  pip install certifi
+  544  python -c "import certifi; print certifi.old_where()"
+  545  REQUESTS_CA_BUNDLE=/usr/local/lib/python2.7/dist-packages/certifi/weak.pem
+  546  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  547  pip install pyopenssl ndg-httpsclient pyasn1
+  548  sudo pip install pyopenssl ndg-httpsclient pyasn1
+  549  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
+  550  ls
+  551  Rscript main.R T
+  552  python push-to-s3
+  553  python push-to-s3.py
+  554  history
