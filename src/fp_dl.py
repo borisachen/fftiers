@@ -9,12 +9,12 @@ import datetime
 import sys
 import csv
 from threading import Timer
-import numpy as np
-from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import cm
-from matplotlib import style
-style.use("ggplot")
+#import numpy as np
+#from sklearn.cluster import KMeans
+#import matplotlib.pyplot as plt
+#from matplotlib.pyplot import cm
+#from matplotlib import style
+#style.use("ggplot")
 
 
 def perform_session_download(args, url, full_file_name):
