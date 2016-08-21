@@ -58,6 +58,7 @@ def perform_session_download(args, url, full_file_name):
 if __name__ == "__main__":    # get all of the commandline arguments
     """
     python /Users/borischen/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /Users/borischen/projects/fftiers/dat/2016/week-0-all-raw.xls
+    python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
     """
     parser = argparse.ArgumentParser("FantasyPros clustering program")
     parser.add_argument('-u', dest='url', help="FantasyPros url", required=True)

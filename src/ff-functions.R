@@ -1,6 +1,9 @@
 download.py.call <- function(url, dest) {
 	me = system('whoami', intern = TRUE)
-	dl_call = paste('python /Users/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	parent = 'Users'
+	if (me=='ubuntu') parent = 'home'
+	if (me=='borischen') parent = 'Users'
+	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
 	system(dl_call)
 }
 
