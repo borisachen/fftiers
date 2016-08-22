@@ -1,3 +1,8 @@
+##
+## Credit to Joel Whitney for writing this block of code
+## https://github.com/JoelWhitney/fftiers-python
+##
+
 import argparse
 import requests
 from lxml import html
