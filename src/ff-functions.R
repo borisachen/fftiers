@@ -11,11 +11,12 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
-	 	#curlstr = paste('curl http://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls > ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
-	  	system(rmold1)
+	 	system(rmold1)
 	  	
-	  	url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php?export=xls', sep='')
+	  	url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls', sep='')
+	    print("downloading data from url:")
+	    print(url)
 	    dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 		download.py.call(url, dest)
 
@@ -66,9 +67,9 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 	if (!IS.FLEX) {
 		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
 		dat = read.delim(tsvpath, sep="\t")
-		#colnames(dat)[1:7]=colnames(dat)[2:8]
-		dat=dat[,c(1:9)]
-		#dat=dat[,c(1:7)]
+		colnames(dat)[1:7]=colnames(dat)[2:8]
+		#dat=dat[,c(1:9)]
+		dat=dat[,c(1:7)]
 		dat$Rank=1:nrow(dat)
 	}
 	if ( IS.FLEX ) {

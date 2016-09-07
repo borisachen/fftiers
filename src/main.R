@@ -12,7 +12,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 0
+thisweek 		= 1
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2016
@@ -40,17 +40,20 @@ system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 injured <- c('')
 
 ### Predraft data
-if (download == TRUE) download.predraft.data()
+#if (download == TRUE) download.predraft.data()
 
-scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
-for (scoring.type in scoring.type.list) {
-	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
-	nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
-	nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-	nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+comment <- function() {
+	scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
+	for (scoring.type in scoring.type.list) {
+		high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
+		nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=5, highcolor=720)
+		nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
+		nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+	}
+	### Curl data from fantasypros. 
+
 }
 
-### Curl data from fantasypros. 
 if (download == TRUE) {
 	download.data(c('qb','rb','wr','te'))
 	download.data(c('flex','k','dst'))
@@ -63,7 +66,7 @@ draw.tiers("qb", 1, 24, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
-#draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 24, 5, XLOW=5)
 draw.tiers("dst", 1, 24, 6, XLOW=5)
 
