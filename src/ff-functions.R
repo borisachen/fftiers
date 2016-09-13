@@ -4,6 +4,7 @@ download.py.call <- function(url, dest) {
 	if (me=='ubuntu') parent = 'home'
 	if (me=='borischen') parent = 'Users'
 	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	print(dl_call)
 	system(dl_call)
 }
 
@@ -14,10 +15,15 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	 	system(rmold1)
 	  	
-	  	url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls', sep='')
+	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls', sep='')
+	  	url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
+	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?','export=xls&','year=2016&week=',thisweek, sep='')
+	  	
 	    print("downloading data from url:")
 	    print(url)
 	    dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    print("targeting destination file:")
+	    print(dest)
 		download.py.call(url, dest)
 
 		rmold2 = paste('rm ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv', sep='')
