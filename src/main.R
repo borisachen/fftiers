@@ -62,7 +62,7 @@ if (download == TRUE) {
 }
 
 ## Weekly
-draw.tiers("qb", 1, 24, 8, highcolor=360)
+draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=5)
 draw.tiers("te", 1, 24, 8, XLOW=5)
