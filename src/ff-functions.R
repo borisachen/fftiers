@@ -15,11 +15,12 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	 	system(rmold1)
 	  	
-	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?export=xls', sep='')
-	  	url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
-	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?','export=xls&','year=2016&week=',thisweek, sep='')
+	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
+	  	# filters=22:64:113:120:125:127:317:406:534
+	  	# filters=64:113:120:125:127:317:406:534
+	    url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
 	  	
-	    print("downloading data from url:")
+	  	print("downloading data from url:")
 	    print(url)
 	    dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    print("targeting destination file:")
