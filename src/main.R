@@ -12,7 +12,8 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= 4
+thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2016-09-06", format="%Y-%m-%d"))/7))+1
+#thisweek 		= 4
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2016
