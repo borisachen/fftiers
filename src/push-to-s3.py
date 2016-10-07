@@ -1,8 +1,8 @@
 
 
 foo = 'aws s3 cp ~/projects/fftiers/out/current/png/weekly-QB.png s3://fftiers/out/weekly-QB.png'
-aws1 = 'aws s3 cp '
-aws2 = ' s3://fftiers/out/current/'
+aws1 = 'aws s3 sync '
+aws2 = ' s3://fftiers/out/'
 
 import os
 
@@ -21,8 +21,8 @@ def FilesPaths(directory):
 			ans.append(f)
 	return ans
 
-mypath = '/home/ubuntu/projects/fftiers/out/current/'
-mypath = '/Users/borischen/projects/fftiers/out/current/'
+mypath = '/home/ubuntu/projects/fftiers/out/'
+mypath = '/Users/borischen/projects/fftiers/out/'
 files_to_push = absoluteFilePaths(mypath)
 file_list = FilesPaths(mypath)
 
