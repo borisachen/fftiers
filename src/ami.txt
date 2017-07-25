@@ -106,40 +106,22 @@ history:
   505  Rscript main.R T
   506  pwd
   507  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
-  508  brew status
-  509  brew update
   510  pip install -U requests[security]
-  511  pip install -U requests[security] --update
-  512  pip install -U requests[security] -update
-  513  pip install -U requests[security]
   514  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
   515  apt-get autoremove && apt-get autoclean
   516  sudo apt-get autoremove && apt-get autoclean
   517  wget https://www.openssl.org/source/openssl-1.0.1g.tar.gz
-  518  ls
-  519  ls -ltr
   520  tar -zxvf openssl-1.0.1g.tar.gz 
-  521  ls
-  522  ls -ltr
   523  openssl-1.0.1g/
-  524  ls
   525  cd openssl-1.0.1g/
-  526  ls
-  527  ls -ltr
-  528  cat README
-  529  less README
   530  less INSTALL
   531  ./config
-  532  less INSTALL
   533  make
   534  make test
-  535  less INSTALL
   536  make install
   537  sudo make install
-  538  cd ..
   539  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
   540  python -c "import certifi; print certifi.old_where()"
-  541  pip install certifi
   542  sudo pip install certifi
   543  pip install certifi
   544  python -c "import certifi; print certifi.old_where()"
@@ -148,8 +130,5 @@ history:
   547  pip install pyopenssl ndg-httpsclient pyasn1
   548  sudo pip install pyopenssl ndg-httpsclient pyasn1
   549  python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls -d /home/ubuntu/projects/fftiers/dat/2016/week-0-all-raw.xls
-  550  ls
   551  Rscript main.R T
-  552  python push-to-s3
   553  python push-to-s3.py
-  554  history

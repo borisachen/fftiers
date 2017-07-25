@@ -16,7 +16,7 @@ thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date(
 #thisweek 		= 4
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
-year			= 2016
+year			= 2017
 #download = FALSE		# Do we want to download fresh data from fantasypros?
 
 ### Set and create input / output directories

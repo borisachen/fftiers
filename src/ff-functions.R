@@ -12,7 +12,7 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
-	 	rmold1 = paste('rm ~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep='')
+	 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.xls', sep='')
 	 	system(rmold1)
 	  	
 	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
@@ -22,15 +22,15 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	  	
 	  	print("downloading data from url:")
 	    print(url)
-	    dest = paste('~/projects/fftiers/dat/2016/week-', thisweek, '-',mp,'-raw.xls', sep="")
+	    dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.xls', sep="")
 	    print("targeting destination file:")
 	    print(dest)
 		download.py.call(url, dest)
 
-		rmold2 = paste('rm ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv', sep='')
+		rmold2 = paste('rm ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv', sep='')
 	  	system(rmold2)
-	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-',mp,'-raw.xls', 
-	  			  ' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', mp, '.tsv',sep="")
+	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-',mp,'-raw.xls', 
+	  			  ' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv',sep="")
 	    system(sedstr);  
 	  }	  
 	}
@@ -39,24 +39,25 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
   # overall rankings download:
 download.predraft.data <- function() {
 
-	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls'
-	dest = '~/projects/fftiers/dat/2016/week-0-all-raw.xls'
+	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls\\&loggedin'
+	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=csv'
+	dest = '~/projects/fftiers/dat/2017/week-0-all-raw.csv'
 	download.py.call(url, dest)
 	
 	url = 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls'
-	dest = '~/projects/fftiers/dat/2016/week-0-all-ppr-raw.xls'
+	dest = '~/projects/fftiers/dat/2017/week-0-all-ppr-raw.xls'
 	download.py.call(url, dest)
 
 	url = 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls'
-	dest = '~/projects/fftiers/dat/2016/week-0-all-half-ppr-raw.xls'
+	dest = '~/projects/fftiers/dat/2017/week-0-all-half-ppr-raw.xls'
 	download.py.call(url, dest)
 
-	sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-raw.xls', 
-				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all', '.tsv',sep="")
-	sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-ppr-raw.xls', 
-				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-	sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2016/week-", thisweek, '-all-half-ppr-raw.xls', 
-				' > ~/projects/fftiers/dat/2016/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+	sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-raw.xls', 
+				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all', '.tsv',sep="")
+	sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-ppr-raw.xls', 
+				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+	sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-half-ppr-raw.xls', 
+				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
 	system(sedstr);  
 	system(sedstr2); 
 	system(sedstr3);
@@ -115,8 +116,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2016 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2016 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2017 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2017 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
