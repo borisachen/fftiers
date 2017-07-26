@@ -1,4 +1,14 @@
-download.py.call <- function(url, dest) {
+download.py.call <- function(url, dest, csv_dest) {
+	me = system('whoami', intern = TRUE)
+	parent = 'Users'
+	if (me=='ubuntu') parent = 'home'
+	if (me=='borischen') parent = 'Users'
+	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,sep='')
+	print(dl_call)
+	system(dl_call)
+}
+
+convert.txt.to.csv.call <- function(infile, outfile) {
 	me = system('whoami', intern = TRUE)
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
@@ -39,28 +49,34 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
   # overall rankings download:
 download.predraft.data <- function() {
 
-	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls\\&loggedin'
-	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=csv'
-	dest = '~/projects/fftiers/dat/2017/week-0-all-raw.csv'
-	download.py.call(url, dest)
+	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php'
+	base_dest = '~/projects/fftiers/dat/2017/week-0-all-raw'
+	dest = paste(base_dest, '.txt',sep='')
+	csv_dest = paste(base_dest, '.csv',sep='')
+	download.py.call(url, dest, csv_dest)
 	
-	url = 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php?export=xls'
-	dest = '~/projects/fftiers/dat/2017/week-0-all-ppr-raw.xls'
-	download.py.call(url, dest)
+	url = 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php'
+	base_dest = '~/projects/fftiers/dat/2017/week-0-all-ppr-raw'
+	dest = paste(base_dest, '.txt',sep='')
+	csv_dest = paste(base_dest, '.csv',sep='')
+	download.py.call(url, dest, csv_dest)
 
-	url = 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php?export=xls'
-	dest = '~/projects/fftiers/dat/2017/week-0-all-half-ppr-raw.xls'
-	download.py.call(url, dest)
 
-	sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-raw.xls', 
-				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all', '.tsv',sep="")
-	sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-ppr-raw.xls', 
-				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-	sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-half-ppr-raw.xls', 
-				' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
-	system(sedstr);  
-	system(sedstr2); 
-	system(sedstr3);
+	url = 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php'
+	base_dest = '~/projects/fftiers/dat/2017/week-0-all-half-ppr-raw'
+	dest = paste(base_dest, '.txt',sep='')
+	csv_dest = paste(base_dest, '.csv',sep='')
+	download.py.call(url, dest, csv_dest)
+
+	#sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-raw.xls', 
+	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all', '.tsv',sep="")
+	#sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-ppr-raw.xls', 
+	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
+	#sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-half-ppr-raw.xls', 
+	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
+	#system(sedstr);  
+	#system(sedstr2); 
+	#system(sedstr3);
 }  
 
 is.tpos.all <- function(tpos) {
@@ -69,16 +85,26 @@ is.tpos.all <- function(tpos) {
 }
 
 ## Wrapper function around error.bar.plot
+debug.comment <- function() {
+
+	pos='all'
+	low=1
+	high=100
+	k=10
+	adjust=0
+	XLOW=0
+	highcolor=360
+	num.higher.tiers=0
+	dfs=FALSE
+
+}
+
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
 	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
 	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
 	if (!IS.FLEX) {
-		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
-		dat = read.delim(tsvpath, sep="\t")
-		colnames(dat)[1:7]=colnames(dat)[2:8]
-		#dat=dat[,c(1:9)]
-		dat=dat[,c(1:7)]
-		dat$Rank=1:nrow(dat)
+		tsvpath = paste(datdir, "week-", thisweek, "-", pos, "-raw.csv",sep="")
+		dat = read.delim(tsvpath, sep=",")
 	}
 	if ( IS.FLEX ) {
 		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
@@ -94,15 +120,22 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 		dat$Avg.Rank = as.numeric(as.character(dat$Avg.Rank))
 		dat$Std.Dev = as.numeric(as.character(dat$Std.Dev))
 	}
- 	dat <- dat[!dat$Player.Name %in% injured,]
+ 	#dat <- dat[!dat$Player.Name %in% injured,]
 	tpos = toupper(pos); 
 	if (pos == "flex") tpos <- "Flex"
 	if (k <= 10) highcolor <- 360
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
 	if (k > 15) highcolor <- 650
-	num.tiers=error.bar.plot(low = low, high = high, k=k, tpos=tpos, dat=dat, 
-		adjust=adjust, XLOW=XLOW, highcolor=highcolor,num.higher.tiers=num.higher.tiers)
+	num.tiers = error.bar.plot(	low=low, 
+								high=high, 
+								k=k, 
+								tpos=tpos, 
+								dat=dat, 
+								adjust=adjust, 
+								XLOW=XLOW, 
+								highcolor=highcolor,
+								num.higher.tiers=num.higher.tiers)
 	return(num.tiers)
 }
 
@@ -118,14 +151,18 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
 	if ((thisweek==0) && (tpos!='ALL')) title = paste("2017 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if ((thisweek==0) && (tpos=='ALL')) title = paste("2017 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
-	dat$Rank = 1:nrow(dat)
+	#dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
 	this.pos$position.rank <- low+c(1:nrow(this.pos))-1	
   	this.pos$position.rank = -this.pos$position.rank
 
+	# Replace column names
+	colnames(this.pos)[which(colnames(this.pos)=="Avg")] <- 'Avg.Rank'
+	colnames(this.pos)[which(colnames(this.pos)=="Player..Team.")] <- 'Player.Name'
+	colnames(this.pos)[which(colnames(this.pos)=="Pos")] <- 'Position'
+
 	# Find clusters
-	colnames(this.pos)[which(colnames(this.pos)=="Ave.Rank")] <- 'Avg.Rank'
 	df = this.pos[,c(which(colnames(this.pos)=="Avg.Rank"))]
 	mclust <- Mclust(df, G=k)
 	this.pos$mcluster <-  mclust$class
@@ -156,8 +193,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (is.tpos.all(tpos)) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', num.higher.tiers,".txt",sep=""))
 	tier.list = array("", k)
 	bad.rows = c()
+
 	for (i in 1:k) {
-      foo <- this.pos[this.pos $cluster==i,]
+      #foo <- this.pos[this.pos $cluster==i,]
       foo <- this.pos[this.pos $mcluster==i,]
       es = paste("Tier ",i,": ",sep="")
       if (num.higher.tiers>0) es = paste("Tier ",i+num.higher.tiers,": ",sep="")
@@ -166,6 +204,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
       tier.list[i] = es
       if (nrow(foo)==0) bad.rows = c(bad.rows, i)
     }
+
     if (length(bad.rows)>0) tier.list = tier.list[-bad.rows]
     num.tiers = length(tier.list)
     writeLines(tier.list, fileConn); close(fileConn)
@@ -227,8 +266,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 
-	if (is.tpos.all(tpos)) { # Reorder for online spreadsheet
-		this.pos = this.pos[,c(1:2,10,3:9)]
+	# Reorder for online spreadsheet
+	if (is.tpos.all(tpos)) { 
+		this.pos = this.pos[,c(1:2,11,3:10)]
 	}
 	write.csv(this.pos, outfilecsv)
 

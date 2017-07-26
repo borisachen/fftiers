@@ -20,7 +20,29 @@ from threading import Timer
 #from matplotlib.pyplot import cm
 #from matplotlib import style
 #style.use("ggplot")
+from bs4 import BeautifulSoup
 
+def convertTxtToCsv(infile, outfile):
+    file = open(infile, 'r') 
+    text = file.read() 
+    soup = BeautifulSoup(text)
+    tables = soup.findAll("table")
+    table = tables[0]
+    headings = [th.get_text().strip() for th in table.find("tr").find_all("th")]    
+    fout = open(outfile, 'w')
+    fout.write(','.join(headings[:-1]) + '\n')
+    rows = []
+    count = 0
+    for row in table.find_all("tr")[1:]:
+        count += 1
+        nextrow = [td.get_text() for td in row.find_all("td")]
+        if len(nextrow) >= 10 and count > 1:
+            line = ','.join(nextrow[:10])
+            fout.write(line + '\n')
+            rows.append(nextrow)
+
+    fout.close()
+    return
 
 def perform_session_download(args, url, full_file_name):
     """
@@ -68,11 +90,14 @@ if __name__ == "__main__":    # get all of the commandline arguments
     parser = argparse.ArgumentParser("FantasyPros clustering program")
     parser.add_argument('-u', dest='url', help="FantasyPros url", required=True)
     parser.add_argument('-d', dest='full_file_name', help="Destination", required=True)
+    parser.add_argument('-c', dest='csv_file_name', help="CSV Destination", required=True)
     userargs = {'username':'borischen003', 'password':'borischen1', 'token':'1'}
     #url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls'
     #full_file_name = '/Users/borischen/projects/fftiers/dat/2016/week-0-all-raw.xls'
     args = parser.parse_args()
     url = args.url
     full_file_name = args.full_file_name
+    csv_file_name = args.csv_file_name
     perform_session_download(userargs, url, full_file_name)
+    convertTxtToCsv(full_file_name, csv_file_name)
 
