@@ -1,19 +1,9 @@
-download.py.call <- function(url, dest, csv_dest) {
+download.py.call <- function(url, dest, csv_dest, ncol=10) {
 	me = system('whoami', intern = TRUE)
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
 	if (me=='borischen') parent = 'Users'
-	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,sep='')
-	print(dl_call)
-	system(dl_call)
-}
-
-convert.txt.to.csv.call <- function(infile, outfile) {
-	me = system('whoami', intern = TRUE)
-	parent = 'Users'
-	if (me=='ubuntu') parent = 'home'
-	if (me=='borischen') parent = 'Users'
-	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ', dest, sep='')
+	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,' -n ',ncol,sep='')
 	print(dl_call)
 	system(dl_call)
 }
@@ -22,32 +12,34 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 	if (download == TRUE) {
 	  # download data for each position
 	  for (mp in pos.list) {
-	 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.xls', sep='')
+	 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
 	 	system(rmold1)
-	  	
-	  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
+	 	if (thisweek == 0)
+	 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
+	 	if (thisweek != 0)
+	  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 	  	# filters=22:64:113:120:125:127:317:406:534
 	  	# filters=64:113:120:125:127:317:406:534
-	    url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-	  	
-	  	print("downloading data from url:")
-	    print(url)
-	    dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.xls', sep="")
-	    print("targeting destination file:")
-	    print(dest)
-		download.py.call(url, dest)
+	    #url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
+	  	#print("downloading data from url:")
+	    #print(url)
+	    
+	    dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep="")
+		csv_dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.csv', sep="")
+	    download.py.call(url, dest, csv_dest, ncol=9)
 
-		rmold2 = paste('rm ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv', sep='')
-	  	system(rmold2)
-	    sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-',mp,'-raw.xls', 
-	  			  ' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv',sep="")
-	    system(sedstr);  
+		#rmold2 = paste('rm ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.csv', sep='')
+	  	#system(rmold2)
+	    #sedstr = paste("d '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-',mp,'-raw.txt', 
+	  	#		  ' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv',sep="")
+	    #system(sedstr);  se
 	  }	  
 	}
 }
 
-  # overall rankings download:
+  
 download.predraft.data <- function() {
+	# overall rankings download:
 
 	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php'
 	base_dest = '~/projects/fftiers/dat/2017/week-0-all-raw'
@@ -67,16 +59,6 @@ download.predraft.data <- function() {
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	download.py.call(url, dest, csv_dest)
-
-	#sedstr = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-raw.xls', 
-	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all', '.tsv',sep="")
-	#sedstr2 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-ppr-raw.xls', 
-	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-ppr', '.tsv',sep="")
-	#sedstr3 = paste("sed '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-all-half-ppr-raw.xls', 
-	#			' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', 'all-half-ppr', '.tsv',sep="")
-	#system(sedstr);  
-	#system(sedstr2); 
-	#system(sedstr3);
 }  
 
 is.tpos.all <- function(tpos) {
@@ -99,6 +81,17 @@ debug.comment <- function() {
 
 }
 
+debug <- function(){
+pos='all'
+low=1
+high=200
+k=3
+adjust=0
+XLOW=0
+highcolor=360
+num.higher.tiers=0
+dfs=FALSE
+}
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
 	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
 	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
@@ -161,7 +154,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	colnames(this.pos)[which(colnames(this.pos)=="Avg")] <- 'Avg.Rank'
 	colnames(this.pos)[which(colnames(this.pos)=="Player..Team.")] <- 'Player.Name'
 	colnames(this.pos)[which(colnames(this.pos)=="Pos")] <- 'Position'
-
+	if (pos == 'dst') colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
+	if (pos == 'DST') colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
+	
 	# Find clusters
 	df = this.pos[,c(which(colnames(this.pos)=="Avg.Rank"))]
 	mclust <- Mclust(df, G=k)
@@ -247,7 +242,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     maxy = max( abs(this.pos$Avg.Rank)+this.pos$Std.Dev/2) 
     
 	if (tpos  != 'Flex') p = p + ylim(-5, maxy)
-    if ((tpos == "Flex") | (tpos=="PPR-FLEX")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
+    if ((tpos == "Flex") | (tpos=="PPR-FLEX")| (tpos=="PPR-WR")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
 	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")

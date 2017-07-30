@@ -1,7 +1,7 @@
 
 
 foo = 'aws s3 cp ~/projects/fftiers/out/current/png/weekly-QB.png s3://fftiers/out/weekly-QB.png'
-aws1 = 'aws s3 sync '
+aws1 = 'aws s3 cp '
 aws2 = ' s3://fftiers/out/'
 
 import os
