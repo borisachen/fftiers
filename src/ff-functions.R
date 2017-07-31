@@ -9,31 +9,21 @@ download.py.call <- function(url, dest, csv_dest, ncol=10) {
 }
 
 download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=FALSE ) {
+	# filters=22:64:113:120:125:127:317:406:534
+	# filters=64:113:120:125:127:317:406:534	    
 	if (download == TRUE) {
-	  # download data for each position
-	  for (mp in pos.list) {
-	 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
-	 	system(rmold1)
-	 	if (thisweek == 0)
-	 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
-	 	if (thisweek != 0)
-	  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
-	  	# filters=22:64:113:120:125:127:317:406:534
-	  	# filters=64:113:120:125:127:317:406:534
-	    #url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-	  	#print("downloading data from url:")
-	    #print(url)
-	    
-	    dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep="")
-		csv_dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.csv', sep="")
-	    download.py.call(url, dest, csv_dest, ncol=9)
-
-		#rmold2 = paste('rm ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.csv', sep='')
-	  	#system(rmold2)
-	    #sedstr = paste("d '1,4d' ~/projects/fftiers/dat/2017/week-", thisweek, '-',mp,'-raw.txt', 
-	  	#		  ' > ~/projects/fftiers/dat/2017/week_', thisweek, '_', mp, '.tsv',sep="")
-	    #system(sedstr);  se
-	  }	  
+		for (mp in pos.list) {
+		 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
+		 	system(rmold1)
+		 	if (thisweek == 0)
+		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
+		 	if (thisweek != 0)
+		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
+		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
+		  	dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep="")
+			csv_dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.csv', sep="")
+		    download.py.call(url, dest, csv_dest, ncol=9)
+	 	}	  
 	}
 }
 
@@ -69,29 +59,18 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='all'
+	pos='dst'
 	low=1
-	high=100
-	k=10
+	high=20
+	k=6
 	adjust=0
-	XLOW=0
+	XLOW=5
 	highcolor=360
 	num.higher.tiers=0
 	dfs=FALSE
 
 }
 
-debug <- function(){
-pos='all'
-low=1
-high=200
-k=3
-adjust=0
-XLOW=0
-highcolor=360
-num.higher.tiers=0
-dfs=FALSE
-}
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
 	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
 	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
@@ -154,8 +133,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	colnames(this.pos)[which(colnames(this.pos)=="Avg")] <- 'Avg.Rank'
 	colnames(this.pos)[which(colnames(this.pos)=="Player..Team.")] <- 'Player.Name'
 	colnames(this.pos)[which(colnames(this.pos)=="Pos")] <- 'Position'
-	if (pos == 'dst') colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
-	if (pos == 'DST') colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
+	colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
 	
 	# Find clusters
 	df = this.pos[,c(which(colnames(this.pos)=="Avg.Rank"))]
@@ -207,13 +185,14 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	this.pos$nchar 	= nchar(as.character(this.pos$Player.Name))
 	this.pos$Tier 	= factor(this.pos$mcluster)
+
 	if (num.higher.tiers>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+num.higher.tiers)
 
-	bigfont			= c("QB","TE","K","DST", "PPR-TE", "ROS-TE","ROS-PPR-TE", "0.5 PPR-TE", "ROS-QB",'HALF-POINT-PPR-TE')
-	smfont			= c("RB", "PPR-RB", "ROS-RB","ROS-PPR-RB", "ROS-K", "ROS-DST", "0.5 PPR-RB", 'HALF-POINT-PPR-RB')
-	tinyfont		= c("WR","Flex", "PPR-WR", "ROS-WR","ROS-PPR-WR","PPR-Flex","PPR-FLEX", 
-						"0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR',
-						'HALF-POINT-PPR-WR','HALF-POINT-PPR-FLEX')
+	bigfont = c("QB","TE","K","DST", "PPR-TE", "ROS-TE","ROS-PPR-TE", "0.5 PPR-TE", "ROS-QB",'HALF-POINT-PPR-TE')
+	smfont = c("RB", "PPR-RB", "ROS-RB","ROS-PPR-RB", "ROS-K", "ROS-DST", "0.5 PPR-RB", 'HALF-POINT-PPR-RB')
+	tinyfont = c("WR","Flex", "PPR-WR", "ROS-WR","ROS-PPR-WR","PPR-Flex","PPR-FLEX", 
+				 "0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR',
+				 'HALF-POINT-PPR-WR','HALF-POINT-PPR-FLEX')
 	
 	if (tpos %in% bigfont) {font = 3.5; barsize=1.5;  dotsize=2;   }
 	if (tpos %in% smfont)  {font = 3;   barsize=1.25; dotsize=1.5; }
@@ -243,7 +222,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     
 	if (tpos  != 'Flex') p = p + ylim(-5, maxy)
     if ((tpos == "Flex") | (tpos=="PPR-FLEX")| (tpos=="PPR-WR")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
-	if ((tpos == 'ALL')  | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
+	if ((tpos == 'ALL') |(tpos == 'WR') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
 	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
 	gd.outfile 	= paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
@@ -262,9 +241,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 
 	# Reorder for online spreadsheet
-	if (is.tpos.all(tpos)) { 
-		this.pos = this.pos[,c(1:2,11,3:10)]
-	}
+	if (is.tpos.all(tpos)) this.pos = this.pos[,c(1:2,11,3:10)]
 	write.csv(this.pos, outfilecsv)
 
 	if (adjust <= 0) write.csv(  this.pos, gd.outfilecsv, row.names=FALSE)

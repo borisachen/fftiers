@@ -22,7 +22,7 @@ def FilesPaths(directory):
 	return ans
 
 mypath = '/home/ubuntu/projects/fftiers/out/'
-mypath = '/Users/borischen/projects/fftiers/out/'
+mypath = '/Users/borischen/projects/fftiers/out/current/'
 files_to_push = absoluteFilePaths(mypath)
 file_list = FilesPaths(mypath)
 
