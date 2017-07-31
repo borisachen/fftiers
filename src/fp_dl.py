@@ -22,7 +22,7 @@ from threading import Timer
 #style.use("ggplot")
 from bs4 import BeautifulSoup
 
-def convertTxtToCsv(infile, outfile):
+def convertTxtToCsv(infile, outfile, ncol=10):
     file = open(infile, 'r') 
     text = file.read() 
     soup = BeautifulSoup(text)
@@ -36,8 +36,8 @@ def convertTxtToCsv(infile, outfile):
     for row in table.find_all("tr")[1:]:
         count += 1
         nextrow = [td.get_text() for td in row.find_all("td")]
-        if len(nextrow) >= 10 and count > 1:
-            line = ','.join(nextrow[:10])
+        if (int(len(nextrow)) >= 10) and (count > 1):
+            line = ','.join(nextrow[:int(ncol)])
             fout.write(line + '\n')
             rows.append(nextrow)
 
@@ -91,6 +91,7 @@ if __name__ == "__main__":    # get all of the commandline arguments
     parser.add_argument('-u', dest='url', help="FantasyPros url", required=True)
     parser.add_argument('-d', dest='full_file_name', help="Destination", required=True)
     parser.add_argument('-c', dest='csv_file_name', help="CSV Destination", required=True)
+    parser.add_argument('-n', dest='ncol', help="number of columns", required=True)
     userargs = {'username':'borischen003', 'password':'borischen1', 'token':'1'}
     #url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?export=xls'
     #full_file_name = '/Users/borischen/projects/fftiers/dat/2016/week-0-all-raw.xls'
@@ -98,6 +99,7 @@ if __name__ == "__main__":    # get all of the commandline arguments
     url = args.url
     full_file_name = args.full_file_name
     csv_file_name = args.csv_file_name
+    ncol = args.ncol
     perform_session_download(userargs, url, full_file_name)
-    convertTxtToCsv(full_file_name, csv_file_name)
+    convertTxtToCsv(full_file_name, csv_file_name, ncol)
 
