@@ -221,7 +221,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     maxy = max( abs(this.pos$Avg.Rank)+this.pos$Std.Dev/2) 
     
 	if (tpos  != 'Flex') p = p + ylim(-5, maxy)
-    if ((tpos == "Flex") | (tpos=="PPR-FLEX")| (tpos=="PPR-WR")  | (tpos == "HALF-POINT-PPR-FLEX")) p = p + ylim(0-XLOW, maxy)
+    if ((tpos == "Flex") | (tpos=="PPR-FLEX")| (tpos=="PPR-WR")  | (tpos == "HALF-POINT-PPR-FLEX") | (tpos == "HALF-POINT-PPR-WR")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL') |(tpos == 'WR') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
 	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")

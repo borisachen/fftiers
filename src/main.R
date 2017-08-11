@@ -76,7 +76,7 @@ draw.tiers("ppr-te", 1, 25, 8)
 #draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
 
 draw.tiers("half-point-ppr-rb", 1, 40, 9)
-draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400)
+draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400, XLOW=10)
 draw.tiers("half-point-ppr-te", 1, 25, 7)
 #draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 
