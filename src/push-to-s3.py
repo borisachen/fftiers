@@ -25,7 +25,7 @@ mypath = '/home/ubuntu/projects/fftiers/out/'
 mypath = '/Users/borischen/projects/fftiers/out/current/'
 files_to_push = absoluteFilePaths(mypath)
 file_list = FilesPaths(mypath)
-
+"""
 files_to_push2 = []
 file_list2 = []
 for f in files_to_push:
@@ -35,8 +35,9 @@ for f in files_to_push:
 for f in file_list:
 	if not ('csv' in f and 'ALL' not in f):
 		file_list2.append(f)
+"""
 
-for i in range(0,len(files_to_push2)):
-	exeline = aws1 + files_to_push2[i] + aws2 + file_list2[i]
+for i in range(0,len(files_to_push)):
+	exeline = aws1 + files_to_push[i] + aws2 + file_list[i]
 	os.system(exeline)
 

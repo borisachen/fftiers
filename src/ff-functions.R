@@ -59,7 +59,7 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='dst'
+	pos='qb'
 	low=1
 	high=20
 	k=6
@@ -131,7 +131,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	# Replace column names
 	colnames(this.pos)[which(colnames(this.pos)=="Avg")] <- 'Avg.Rank'
-	colnames(this.pos)[which(colnames(this.pos)=="Player..Team.")] <- 'Player.Name'
+	#colnames(this.pos)[which(colnames(this.pos)=="Overall..Team.")] <- 'Player.Name'
+	colnames(this.pos)[2] <- 'Player.Name'
 	colnames(this.pos)[which(colnames(this.pos)=="Pos")] <- 'Position'
 	colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
 	
