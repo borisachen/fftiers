@@ -13,8 +13,8 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2016-09-06", format="%Y-%m-%d"))/7))+1
-thisweek 		= 0
+thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2017-09-04", format="%Y-%m-%d"))/7))+1
+#thisweek 		= 0
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
 year			= 2017
@@ -42,14 +42,14 @@ system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 injured <- c('')
 
 ### Predraft data
-if (download == TRUE) download.predraft.data()
+#if (download == TRUE) download.predraft.data()
 
 scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
 for (scoring.type in scoring.type.list) {
-	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
-	nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
-	nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-	nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+	#high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
+	#nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
+	#nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
+	#nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
 }
 
 
@@ -66,17 +66,17 @@ draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400)
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=10)
 draw.tiers("te", 1, 24, 8, XLOW=5)
-#draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("flex", 1, 80, 14, XLOW=5, highcolor=650)
 draw.tiers("k", 1, 20, 5, XLOW=5)
 draw.tiers("dst", 1, 20, 6, XLOW=2)
 
 draw.tiers("ppr-rb", 1, 40, 10)
 draw.tiers("ppr-wr", 1, 60, 12, highcolor=500, XLOW=10)
 draw.tiers("ppr-te", 1, 25, 8)
-#draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
 
 draw.tiers("half-point-ppr-rb", 1, 40, 9)
 draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400, XLOW=10)
 draw.tiers("half-point-ppr-te", 1, 25, 7)
-#draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
+draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
 

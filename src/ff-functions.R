@@ -59,7 +59,7 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='qb'
+	pos='flex'
 	low=1
 	high=20
 	k=6
@@ -71,6 +71,7 @@ debug.comment <- function() {
 
 }
 
+
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
 	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
 	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
@@ -79,17 +80,16 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 		dat = read.delim(tsvpath, sep=",")
 	}
 	if ( IS.FLEX ) {
-		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
-		if (dfs==TRUE) tsvpath = paste(paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep=''), toupper(pos), '.tsv',sep="")
-		dat = read.delim(tsvpath, sep="\t", header=FALSE)
-		colnames(dat)= c("Rank","Player.Name" ,'pos',"Team","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev","X")
+		tsvpath = paste(datdir, "week-", thisweek, "-", pos, "-raw.csv",sep="")
+		dat = read.delim(tsvpath, sep=",", header=FALSE)
+		colnames(dat)= c("Rank","Player.Name" ,'pos',"Matchup","Best","Worst","Avg","Std.Dev")
 		dat=dat[2:nrow(dat),]
 	}
 	if (thisweek>0) { 
 		dat$Rank = as.numeric(as.character(dat$Rank))
-		dat$Best.Rank = as.numeric(as.character(dat$Best.Rank))
-		dat$Worst.Rank = as.numeric(as.character(dat$Worst.Rank))
-		dat$Avg.Rank = as.numeric(as.character(dat$Avg.Rank))
+		dat$Best = as.numeric(as.character(dat$Best))
+		dat$Worst = as.numeric(as.character(dat$Worst))
+		dat$Avg = as.numeric(as.character(dat$Avg))
 		dat$Std.Dev = as.numeric(as.character(dat$Std.Dev))
 	}
  	#dat <- dat[!dat$Player.Name %in% injured,]
