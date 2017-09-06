@@ -17,9 +17,10 @@ download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=
 		 	system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
-		 	if (thisweek != 0)
+		 	if (thisweek != 0) {
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
-		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
+		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
+		  	}
 		  	dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep="")
 			csv_dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.csv', sep="")
 		    download.py.call(url, dest, csv_dest, ncol=9)
