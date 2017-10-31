@@ -21,8 +21,9 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		 	#system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
-		 	if (thisweek != 0) {
+		 	if (thisweek != 0) 
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
+
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
 		  	head.dir = '~/projects/fftiers/dat/2017/week-'
 		  	pos.scoring = paste(position, scoring, sep='-')
@@ -32,6 +33,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 	 	}	  
 	}
 }
+
 
   
 download.predraft.data <- function() {
@@ -78,11 +80,7 @@ debug.comment <- function() {
 }
 
 
-draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE, scoring='STD') {
-	"""
-	pos='flx'
-	scoring='STD'
-	"""
+draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, scoring='STD') {
 	position = toupper(pos); 
 	pos.scoring = paste(position, scoring, sep='-')
 	tpos = pos.scoring
@@ -94,6 +92,8 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
 	if (k > 15) highcolor <- 650
+	if (scoring == 'STD') tpos = position
+	print(tpos)
 	num.tiers = error.bar.plot(	low=low, 
 								high=high, 
 								k=k, 
@@ -183,12 +183,12 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	if (num.higher.tiers>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+num.higher.tiers)
 
-	bigfont = c("QB","TE","K","DST", "PPR-TE", "ROS-TE","ROS-PPR-TE", "0.5 PPR-TE", "ROS-QB",'HALF-POINT-PPR-TE')
-	smfont = c("RB", "PPR-RB", "ROS-RB","ROS-PPR-RB", "ROS-K", "ROS-DST", "0.5 PPR-RB", 'HALF-POINT-PPR-RB')
-	tinyfont = c("WR","Flex", "PPR-WR", "ROS-WR","ROS-PPR-WR","PPR-Flex","PPR-FLEX", 
-				 "0.5 PPR-WR","0.5 PPR-Flex", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR',
-				 'HALF-POINT-PPR-WR','HALF-POINT-PPR-FLEX')
+	bigfont = c("QB","TE","K","DST", "PPR-TE", "TE-HALF")
+	smfont = c("RB", "RB-PPR", "RB-HALF")
+	tinyfont = c("WR","FLX", "WR-PPR","FLX-PPR", 
+				 "WR-HALF","FLX-HALF", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR')
 	
+	print(tpos)
 	if (tpos %in% bigfont) {font = 3.5; barsize=1.5;  dotsize=2;   }
 	if (tpos %in% smfont)  {font = 3;   barsize=1.25; dotsize=1.5; }
 	if (tpos %in% tinyfont){font = 2.5; barsize=1;    dotsize=1;   }
@@ -215,8 +215,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	p = p + scale_colour_hue(l=55, h=c(0, highcolor))
     maxy = max( abs(this.pos$Avg.Rank)+this.pos$Std.Dev/2) 
     
-	if (tpos  != 'Flex') p = p + ylim(-5, maxy)
-    if ((tpos == "Flex") | (tpos=="PPR-FLEX")| (tpos=="PPR-WR")  | (tpos == "HALF-POINT-PPR-FLEX") | (tpos == "HALF-POINT-PPR-WR")) p = p + ylim(0-XLOW, maxy)
+	if (tpos  != 'FLX') p = p + ylim(-5, maxy)
+    if ((tpos == "FLX") | (tpos=="FLX-PPR")| (tpos=="WR-PPR")  | (tpos == "FLX-HALF") | (tpos == "WR-HALF")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL') |(tpos == 'WR') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
 	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
@@ -255,4 +255,3 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 	return(num.tiers)
 }
-

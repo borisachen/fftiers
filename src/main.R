@@ -55,17 +55,17 @@ predraft.comment <- function() {
 
 
 if (download == TRUE) {
-	download.data(c('flx'), scoring='STD')
-	download.data(c('flx','rb','wr','te'), scoring='STD')
+	download.data(c('rb'), scoring='STD')
 	download.data(c('qb','k','dst'))
-	download.data(c('flx','rb','wr','te'), scoring='PPR')
+	download.data(c('flx','rb','wr','te'), scoring='STD')
+	download.data(c('flx','rb','wr','te'), scoring='PPR') 
 	download.data(c('flx','rb','wr','te'), scoring='HALF')
 	#download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
 	#download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
 }
 
 ## Weekly
-draw.tiers("qb", 1, 26, 8, highcolor=360, scoring='STD')
+draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400, scoring='STD')
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=10, scoring='STD')
 draw.tiers("te", 1, 24, 8, XLOW=5, scoring='STD')
@@ -73,13 +73,13 @@ draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='STD')
 draw.tiers("k", 1, 20, 5, XLOW=5)
 draw.tiers("dst", 1, 20, 6, XLOW=2)
 
-draw.tiers("ppr-rb", 1, 40, 10)
-draw.tiers("ppr-wr", 1, 60, 12, highcolor=500, XLOW=10)
-draw.tiers("ppr-te", 1, 25, 8)
-draw.tiers("ppr-flex", 1, 80, 14, XLOW=5, highcolor=650)
+draw.tiers("rb", 1, 40, 10, scoring='PPR')
+draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=10, scoring='PPR')
+draw.tiers("te", 1, 25, 8, scoring='PPR')
+draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='PPR')
 
-draw.tiers("half-point-ppr-rb", 1, 40, 9)
-draw.tiers("half-point-ppr-wr", 1, 60, 10, highcolor=400, XLOW=10)
-draw.tiers("half-point-ppr-te", 1, 25, 7)
-draw.tiers("half-point-ppr-flex", 1, 80, 15, XLOW=5, highcolor=650)
+draw.tiers("rb", 1, 40, 9, scoring='HALF')
+draw.tiers("wr", 1, 60, 10, highcolor=400, XLOW=10, scoring='HALF')
+draw.tiers("te", 1, 25, 7, scoring='HALF')
+draw.tiers("flx", 1, 80, 15, XLOW=5, highcolor=650, scoring='HALF')
 
