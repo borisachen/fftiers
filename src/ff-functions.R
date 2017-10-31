@@ -1,28 +1,34 @@
-download.py.call <- function(url, dest, csv_dest, ncol=10) {
+
+download.py.call <- function(json_dest, csv_dest, position, scoring) {
+	year = '2017'
 	me = system('whoami', intern = TRUE)
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
 	if (me=='borischen') parent = 'Users'
-	dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,' -n ',ncol,sep='')
-	print(dl_call)
-	system(dl_call)
+	api_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_api.py -j ',json_dest,' -c ',csv_dest,' -y ',year,' -p ',position,' -w ',thisweek,' -s ',scoring,sep='')
+	#dl_call = paste('python /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,' -n ',ncol,sep='')
+	print(api_call)
+	system(api_call)
 }
 
-download.data <- function(pos.list=c('qb','rb','wr','te','flex','k','dst'), dfs=FALSE ) {
+download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 	# filters=22:64:113:120:125:127:317:406:534
-	# filters=64:113:120:125:127:317:406:534	    
+	# filters=64:113:120:125:127:317:406:534
 	if (download == TRUE) {
 		for (mp in pos.list) {
-		 	rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
-		 	system(rmold1)
+			position = toupper(mp)
+		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
+		 	#system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
 		 	if (thisweek != 0)
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-		  	dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep="")
-			csv_dest = paste('~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.csv', sep="")
-		    download.py.call(url, dest, csv_dest, ncol=9)
+		  	head.dir = '~/projects/fftiers/dat/2017/week-'
+		  	pos.scoring = paste(position, scoring, sep='-')
+		  	json_dest = paste(head.dir, thisweek, '-', pos.scoring, '.json', sep="")
+			csv_dest = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
+		    download.py.call(json_dest, csv_dest, position, scoring)
 	 	}	  
 	}
 }
@@ -71,30 +77,18 @@ debug.comment <- function() {
 
 }
 
-draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE) {
-	#dat = read.delim(paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep=""), sep="\t", header=FALSE)
-	IS.FLEX = (pos=='flex') | (pos=='ppr-flex') | (pos=='half-point-ppr-flex')
-	if (!IS.FLEX) {
-		tsvpath = paste(datdir, "week-", thisweek, "-", pos, "-raw.csv",sep="")
-		dat = read.delim(tsvpath, sep=",")
-	}
-	if ( IS.FLEX ) {
-		tsvpath = paste(datdir, "week_", thisweek, "_", pos, ".tsv",sep="")
-		if (dfs==TRUE) tsvpath = paste(paste('~/projects/fbdfs/dat/week',thisweek,'/fantasypros/',sep=''), toupper(pos), '.tsv',sep="")
-		dat = read.delim(tsvpath, sep="\t", header=FALSE)
-		colnames(dat)= c("Rank","Player.Name" ,'pos',"Team","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev","X")
-		dat=dat[2:nrow(dat),]
-	}
-	if (thisweek>0) { 
-		dat$Rank = as.numeric(as.character(dat$Rank))
-		dat$Best.Rank = as.numeric(as.character(dat$Best.Rank))
-		dat$Worst.Rank = as.numeric(as.character(dat$Worst.Rank))
-		dat$Avg.Rank = as.numeric(as.character(dat$Avg.Rank))
-		dat$Std.Dev = as.numeric(as.character(dat$Std.Dev))
-	}
- 	#dat <- dat[!dat$Player.Name %in% injured,]
-	tpos = toupper(pos); 
-	if (pos == "flex") tpos <- "Flex"
+draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE, scoring='STD') {
+	"""
+	pos='flx'
+	scoring='STD'
+	"""
+	position = toupper(pos); 
+	pos.scoring = paste(position, scoring, sep='-')
+	tpos = pos.scoring
+	head.dir = '~/projects/fftiers/dat/2017/week-'
+	csv_path = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
+	dat = read.delim(csv_path, sep=",")
+	colnames(dat)= c("Rank","Player.Name","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev")
 	if (k <= 10) highcolor <- 360
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
@@ -131,7 +125,6 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	# Replace column names
 	colnames(this.pos)[which(colnames(this.pos)=="Avg")] <- 'Avg.Rank'
-	#colnames(this.pos)[which(colnames(this.pos)=="Overall..Team.")] <- 'Player.Name'
 	colnames(this.pos)[2] <- 'Player.Name'
 	colnames(this.pos)[which(colnames(this.pos)=="Pos")] <- 'Position'
 	colnames(this.pos)[which(colnames(this.pos)=="Team.DST")] <- 'Player.Name'
