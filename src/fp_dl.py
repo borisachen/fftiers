@@ -22,7 +22,20 @@ from threading import Timer
 #style.use("ggplot")
 from bs4 import BeautifulSoup
 
-def convertTxtToCsv(infile, outfile, ncol=10):
+"""
+python /home/ubuntu/projects/fftiers/src/fp_dl.py -u https://www.fantasypros.com/nfl/rankings/half-point-ppr-flex.php?week=1\\&export=xls 
+-d ~/projects/fftiers/dat/2017/week-1-half-point-ppr-flex-raw.txt 
+-c ~/projects/fftiers/dat/2017/week-1-half-point-ppr-flex-raw.csv -n 9
+infile = '/home/ubuntu/projects/fftiers/dat/2017/week-1-half-point-ppr-flex-raw.txt'
+outfile = '/home/ubuntu/fftiers/dat/2017/week-1-half-point-ppr-flex-raw.csv'
+'flex' in outfile
+ncol = 9
+"""
+
+def convertTxtToCsv(infile, outfile, ncol=8):
+    ncol = 8
+    if 'flex' in outfile:
+        ncol = 9
     file = open(infile, 'r') 
     text = file.read() 
     soup = BeautifulSoup(text)
@@ -32,15 +45,18 @@ def convertTxtToCsv(infile, outfile, ncol=10):
     fout = open(outfile, 'w')
     fout.write(','.join(headings[:-1]) + '\n')
     rows = []
-    count = 0
+    count = 1
     for row in table.find_all("tr")[1:]:
-        count += 1
-        nextrow = [td.get_text() for td in row.find_all("td")]
-        if (int(len(nextrow)) >= 10) and (count > 1):
-            line = ','.join(nextrow[:int(ncol)])
-            fout.write(line + '\n')
-            rows.append(nextrow)
-
+        try:
+            count += 1
+            nextrow = [td.get_text() for td in row.find_all("td")]
+            if (int(len(nextrow)) >= ncol) and (count > 1):
+                line = ','.join(nextrow[:int(ncol-1)])
+                line = line.replace(' \n', '')
+                fout.write(line + '\n')
+                rows.append(nextrow)
+        except:
+            pass
     fout.close()
     return
 

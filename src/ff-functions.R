@@ -21,7 +21,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		 	#system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
-		 	if (thisweek != 0)
+		 	if (thisweek != 0) {
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
 		  	head.dir = '~/projects/fftiers/dat/2017/week-'
@@ -65,7 +65,7 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='qb'
+	pos='flex'
 	low=1
 	high=20
 	k=6
@@ -76,6 +76,7 @@ debug.comment <- function() {
 	dfs=FALSE
 
 }
+
 
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, dfs=FALSE, scoring='STD') {
 	"""
