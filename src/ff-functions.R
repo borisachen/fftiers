@@ -65,7 +65,7 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='flex'
+	pos='flx'
 	low=1
 	high=20
 	k=6
