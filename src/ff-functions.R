@@ -16,6 +16,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 	# filters=64:113:120:125:127:317:406:534
 	if (download == TRUE) {
 		for (mp in pos.list) {
+			Sys.sleep(1)
 			position = toupper(mp)
 		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
 		 	#system(rmold1)
@@ -183,7 +184,7 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 
 	if (num.higher.tiers>0) this.pos$Tier 	= as.character(as.numeric(as.character(this.pos$mcluster))+num.higher.tiers)
 
-	bigfont = c("QB","TE","K","DST", "PPR-TE", "TE-HALF")
+	bigfont = c("QB","TE","K","DST", "PPR-TE", "TE-HALF", "TE-PPR")
 	smfont = c("RB", "RB-PPR", "RB-HALF")
 	tinyfont = c("WR","FLX", "WR-PPR","FLX-PPR", 
 				 "WR-HALF","FLX-HALF", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR')

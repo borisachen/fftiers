@@ -55,13 +55,10 @@ predraft.comment <- function() {
 
 
 if (download == TRUE) {
-	download.data(c('rb'), scoring='STD')
 	download.data(c('qb','k','dst'))
 	download.data(c('flx','rb','wr','te'), scoring='STD')
 	download.data(c('flx','rb','wr','te'), scoring='PPR') 
 	download.data(c('flx','rb','wr','te'), scoring='HALF')
-	#download.data(c('ppr-rb','ppr-wr','ppr-te','ppr-flex'))
-	#download.data(c('half-point-ppr-rb','half-point-ppr-wr','half-point-ppr-te','half-point-ppr-flex'))
 }
 
 ## Weekly
