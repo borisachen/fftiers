@@ -66,7 +66,7 @@ draw.tiers("qb", 1, 26, 8, highcolor=360)
 draw.tiers("rb", 1, 40, 9, highcolor=400, scoring='STD')
 draw.tiers("wr", 1, 60, 12, highcolor=500, XLOW=10, scoring='STD')
 draw.tiers("te", 1, 24, 8, XLOW=5, scoring='STD')
-draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='STD')
+draw.tiers("flx", 20, 95, 14, XLOW=5, highcolor=650, scoring='STD')
 draw.tiers("k", 1, 20, 5, XLOW=5)
 draw.tiers("dst", 1, 20, 6, XLOW=2)
 
