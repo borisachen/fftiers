@@ -1,7 +1,7 @@
 import os
 import json
 import argparse
-
+import datetime
 
 def perform_session_download(year, position, week, scoring, json_path):
 	"""
@@ -14,15 +14,17 @@ def perform_session_download(year, position, week, scoring, json_path):
 	"""
 	api_key = getAPIKey()
 	filters = '64:113:120:125:127:317:406:534'
-
-	curl_str = """
-	curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
-	""".format(year, position, week, scoring, filters, api_key, json_path)
+	day_of_week = datetime.datetime.today().weekday()
 
 	curl_str = """
 	curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}" -H "x-api-key: {}" > {}	
 	""".format(year, position, week, scoring, api_key, json_path)
-	
+		
+	if day_of_week == 1:
+		curl_str = """
+		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
+		""".format(year, position, week, scoring, filters, api_key, json_path)
+
 	print(curl_str)
 	os.system(curl_str)
 
