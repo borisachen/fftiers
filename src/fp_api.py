@@ -5,7 +5,7 @@ import datetime
 
 def perform_session_download(year, position, week, scoring, json_path):
 	"""
-	year = '2017'
+	year = '2018'
 	position = 'RB'
 	week = '9'
 	scoring = 'STD'
@@ -15,7 +15,8 @@ def perform_session_download(year, position, week, scoring, json_path):
 	api_key = getAPIKey()
 	filters = '64:113:120:125:127:317:406:534'
 	day_of_week = datetime.datetime.today().weekday()
-	
+	make_path()
+
 	curl_str = """
 	curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
 	""".format(year, position, week, scoring, filters, api_key, json_path)
@@ -28,28 +29,44 @@ def perform_session_download(year, position, week, scoring, json_path):
 	print(curl_str)
 	os.system(curl_str)
 
+def make_path():
+	try:
+		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2018/')
+	except:
+		pass
 
-def playerToRow(player):
-	p = player
-	r = []
-	r = r + [str(p['rank_ecr'])]
-	r = r + [p['player_name']]
-	r = r + [p['player_opponent']]
-	r = r + [p['rank_min']]
-	r = r + [p['rank_max']]
-	r = r + [p['rank_ave']]
-	r = r + [p['rank_std']]
-	res = ",".join(r)
-	return res
+def playerToRow(player, week):
+	try:
+		p = player
+		r = []
+		r = r + [str(p['rank_ecr'])]
+		r = r + [p['player_name']]
+		if week == 0:
+			r = r + [p['player_positions']]
+		if week >= 1:
+			r = r + [p['player_opponent']]
+		r = r + [p['rank_min']]
+		r = r + [p['rank_max']]
+		r = r + [p['rank_ave']]
+		r = r + [p['rank_std']]
+		res = ",".join(r)
+		return res
+	except:
+		return ''
 
 
-def convertJsonToCsv(json_path, out_csv):
+def convertJsonToCsv(json_path, out_csv, week):
 	with open(json_path) as data_file:    
 		data = json.load(data_file)
 	rows = []
-	rows.append("Rank,Player,Opp,Best,Worst,Avg,Std Dev")
+	if week == 0:
+		rows.append("Rank,Player,Position,Best,Worst,Avg,Std Dev")
+	else:
+		rows.append("Rank,Player,Opp,Best,Worst,Avg,Std Dev")
 	for player in data['players']:
-		rows.append(playerToRow(player))
+		pr = playerToRow(player, week)
+		if pr != '':
+			rows.append(pr)
 	fout = open(out_csv, 'w')
 	for item in rows:
 		fout.write("%s\n" % item)
@@ -74,4 +91,5 @@ if __name__ == "__main__":
 	parser.add_argument('-s', dest='scoring', help="scoring", required=True)
 	args = parser.parse_args()
 	perform_session_download(args.year, args.position, args.week, args.scoring, args.json_path)
-	convertJsonToCsv(args.json_path, args.csv_file_name)
+	convertJsonToCsv(args.json_path, args.csv_file_name, int(args.week))
+	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2018/week-0-all-raw.txt', 'foo.csv', 0)

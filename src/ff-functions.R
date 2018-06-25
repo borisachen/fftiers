@@ -1,6 +1,6 @@
 
 download.py.call <- function(json_dest, csv_dest, position, scoring) {
-	year = '2017'
+	year = '2018'
 	me = system('whoami', intern = TRUE)
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
@@ -18,7 +18,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		for (mp in pos.list) {
 			Sys.sleep(1)
 			position = toupper(mp)
-		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2017/week-', thisweek, '-',mp,'-raw.txt', sep='')
+		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2018/week-', thisweek, '-',mp,'-raw.txt', sep='')
 		 	#system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
@@ -26,7 +26,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-		  	head.dir = '~/projects/fftiers/dat/2017/week-'
+		  	head.dir = '~/projects/fftiers/dat/2018/week-'
 		  	pos.scoring = paste(position, scoring, sep='-')
 		  	json_dest = paste(head.dir, thisweek, '-', pos.scoring, '.json', sep="")
 			csv_dest = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
@@ -40,24 +40,20 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 download.predraft.data <- function() {
 	# overall rankings download:
 
-	url = 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php'
-	base_dest = '~/projects/fftiers/dat/2017/week-0-all-raw'
+	base_dest = '~/projects/fftiers/dat/2018/week-0-ALL-STD-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
-	download.py.call(url, dest, csv_dest)
+	download.py.call(dest, csv_dest, position='ALL', scoring='STD')
 	
-	url = 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php'
-	base_dest = '~/projects/fftiers/dat/2017/week-0-all-ppr-raw'
+	base_dest = '~/projects/fftiers/dat/2018/week-0-ALL-PPR-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
-	download.py.call(url, dest, csv_dest)
+	download.py.call(dest, csv_dest, position='ALL', scoring='PPR')
 
-
-	url = 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php'
-	base_dest = '~/projects/fftiers/dat/2017/week-0-all-half-ppr-raw'
+	base_dest = '~/projects/fftiers/dat/2018/week-0-ALL-HALF-PPR-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
-	download.py.call(url, dest, csv_dest)
+	download.py.call(dest, csv_dest, position='ALL', scoring='half-point-ppr')
 }  
 
 is.tpos.all <- function(tpos) {
@@ -68,33 +64,38 @@ is.tpos.all <- function(tpos) {
 ## Wrapper function around error.bar.plot
 debug.comment <- function() {
 
-	pos='flx'
+	pos='all-ppr'
 	low=1
-	high=20
+	high=60
 	k=6
 	adjust=0
 	XLOW=5
 	highcolor=360
 	num.higher.tiers=0
-	dfs=FALSE
+	scoring='STD'
 
 }
 
 
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, scoring='STD') {
+	# pos='all'; low=1; high=100; k=3; adjust=0; XLOW=0; highcolor=360; num.higher.tiers=0; scoring='STD'
 	position = toupper(pos); 
 	pos.scoring = paste(position, scoring, sep='-')
 	tpos = pos.scoring
-	head.dir = '~/projects/fftiers/dat/2017/week-'
+	head.dir = '~/projects/fftiers/dat/2018/week-'
 	csv_path = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
+	if (pos == 'all-ppr') csv_path 		= paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
+	if (pos == 'all-half-ppr') csv_path = paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
+
 	dat = read.delim(csv_path, sep=",")
-	colnames(dat)= c("Rank","Player.Name","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev")
+	if (thisweek == 0) colnames(dat)= c("Rank","Player.Name","Position","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev")
+	if (thisweek >= 1) colnames(dat)= c("Rank","Player.Name","Matchup","Best.Rank","Worst.Rank","Avg.Rank","Std.Dev")
 	if (k <= 10) highcolor <- 360
 	if (k > 11) highcolor <- 450
 	if (k > 13) highcolor <- 550
 	if (k > 15) highcolor <- 650
 	if (scoring == 'STD') tpos = position
-	print(tpos)
+
 	num.tiers = error.bar.plot(	low=low, 
 								high=high, 
 								k=k, 
@@ -115,10 +116,11 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	
 	Sys.setenv(TZ='PST8PDT')
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
+	curr.time = substr(curr.time, 1, nchar(curr.time)-3)
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2017 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2017 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2018 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2018 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	#dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
@@ -189,18 +191,18 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	tinyfont = c("WR","FLX", "WR-PPR","FLX-PPR", 
 				 "WR-HALF","FLX-HALF", 'ALL', 'ALL-PPR', 'ALL-HALF-PPR')
 	
-	print(tpos)
 	if (tpos %in% bigfont) {font = 3.5; barsize=1.5;  dotsize=2;   }
 	if (tpos %in% smfont)  {font = 3;   barsize=1.25; dotsize=1.5; }
 	if (tpos %in% tinyfont){font = 2.5; barsize=1;    dotsize=1;   }
 	if (tpos %in% "ALL")   {font = 2.4; barsize=1;    dotsize=0.8;   }
+	if (tpos %in% "all")   {font = 2.4; barsize=1;    dotsize=0.8;   }
 	
 	p = ggplot(this.pos, aes(x=position.rank, y=Avg.Rank))
-	p = p + ggtitle(title)
+	p = p + ggtitle(title) + theme(plot.title = element_text(hjust = 0.5))
     p = p + geom_errorbar(aes(ymin = Avg.Rank - Std.Dev/2, ymax = Avg.Rank + Std.Dev/2, width=0.2, colour=Tier), size=barsize*0.8, alpha=0.4)
 	p = p + geom_point(colour="grey20", size=dotsize) 
     p = p + coord_flip()
-    p = p + annotate("text", x = Inf, y = -Inf, label = "www.borischen.co", hjust=1.1, vjust=-1.1, col="white", cex=6, fontface = "bold", alpha = 0.8)
+    #p = p + annotate("text", x = Inf, y = -Inf, label = "www.borischen.co", hjust=1.1, vjust=-1.1, col="white", cex=6, fontface = "bold", alpha = 0.8)
 	if (tpos %in% bigfont)     			
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/6 - Std.Dev/1.4), size=font)
 	if (tpos %in% smfont)     			
@@ -208,7 +210,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (tpos %in% tinyfont)     			
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) 
     if ((tpos == 'ALL') | (tpos == 'ALL-PPR'))
-    	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) + geom_text(aes(label=Position, y = Avg.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') 
+    	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) 
+    	p = p + geom_text(aes(label=Position, y = Avg.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') 
     p = p + scale_x_continuous("Expert Consensus Rank")
     p = p + ylab("Average Expert Rank")
     p = p + theme(legend.justification=c(1,1), legend.position=c(1,1))
@@ -237,15 +240,15 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 
 	# Reorder for online spreadsheet
-	if (is.tpos.all(tpos)) this.pos = this.pos[,c(1:2,11,3:10)]
+	if (is.tpos.all(tpos)) this.pos = this.pos[,c(1:2,8,3:7)]
 	write.csv(this.pos, outfilecsv)
 
 	if (adjust <= 0) write.csv(  this.pos, gd.outfilecsv, row.names=FALSE)
 	if (adjust >  0) write.table(this.pos, gd.outfilecsv, row.names=FALSE, append=TRUE, col.names=FALSE, sep=',')
 	
     DPI=150
-    ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
-    ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
+	ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
+	ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
 
 	if (is.tpos.all(tpos)) {
 		val = c()
