@@ -77,7 +77,7 @@ debug.comment <- function() {
 }
 
 
-draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, scoring='STD') {
+draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, scoring='STD', save=TRUE) {
 	# pos='all'; low=1; high=100; k=3; adjust=0; XLOW=0; highcolor=360; num.higher.tiers=0; scoring='STD'
 	position = toupper(pos); 
 	pos.scoring = paste(position, scoring, sep='-')
@@ -104,7 +104,8 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 								adjust=adjust, 
 								XLOW=XLOW, 
 								highcolor=highcolor,
-								num.higher.tiers=num.higher.tiers)
+								num.higher.tiers=num.higher.tiers,
+								save=save)
 	return(num.tiers)
 }
 
@@ -112,7 +113,7 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 ### main plotting function
 
 error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="dummy", tpos="QB", dat, 
-	adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0) {
+	adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, save=TRUE) {
 	
 	Sys.setenv(TZ='PST8PDT')
 	curr.time = as.character(format(Sys.time(), "%a %b %d %Y %X"))
@@ -246,10 +247,12 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (adjust <= 0) write.csv(  this.pos, gd.outfilecsv, row.names=FALSE)
 	if (adjust >  0) write.table(this.pos, gd.outfilecsv, row.names=FALSE, append=TRUE, col.names=FALSE, sep=',')
 	
-    DPI=150
-	ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
-	ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
-
+    if (save == TRUE) {
+    	DPI=150
+	    ggsave(file=outfile, width=9.5, height=8, dpi=DPI)
+		ggsave(file=gd.outfile, width=9.5, height=8, dpi=DPI)
+    }
+	
 	if (is.tpos.all(tpos)) {
 		val = c()
 		for (i in min(as.numeric(levels(factor(this.pos$Tier)))):max(as.numeric(levels(factor(this.pos$Tier)))))  {

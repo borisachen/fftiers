@@ -46,35 +46,25 @@ if (download == TRUE) download.predraft.data()
 
 scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
 for (scoring.type in scoring.type.list) {
-	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
+	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720, save=FALSE)
 	nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
 	nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
 	nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
 }
 
-## debugging
-scoring.type = 'all'
-high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers('all', 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
-
-scoring.type = 'all-ppr'
-high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers('all', 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
-
-scoring.type = 'all-half-ppr'
-high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720)
-nt.std.1 = draw.tiers('all', 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
-##### end debug
-
 
 if (download == TRUE) {
 	download.data(c('qb','k','dst'))
-	download.data(c('rb','wr','te'), scoring='STD')
-	download.data(c('rb','wr','te'), scoring='PPR') 
-	download.data(c('rb','wr','te'), scoring='HALF')
-	#download.data(c('flx','rb','wr','te'), scoring='STD')
-	#download.data(c('flx','rb','wr','te'), scoring='PPR') 
-	#download.data(c('flx','rb','wr','te'), scoring='HALF')
+	if (thisweek == 0) {
+		download.data(c('rb','wr','te'), scoring='STD')
+		download.data(c('rb','wr','te'), scoring='PPR') 
+		download.data(c('rb','wr','te'), scoring='HALF')
+	}
+	if (thisweek > 0) {
+		download.data(c('flx','rb','wr','te'), scoring='STD')
+		download.data(c('flx','rb','wr','te'), scoring='PPR') 
+		download.data(c('flx','rb','wr','te'), scoring='HALF')	
+	}
 }
 
 ## Weekly
@@ -93,7 +83,8 @@ draw.tiers("rb", 1, 40, 9, scoring='HALF')
 draw.tiers("wr", 1, 60, 10, highcolor=400, XLOW=10, scoring='HALF')
 draw.tiers("te", 1, 25, 7, scoring='HALF')
 
-#draw.tiers("flx", 20, 95, 14, XLOW=5, highcolor=650, scoring='STD')
-#draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='PPR')
-#draw.tiers("flx", 1, 80, 15, XLOW=5, highcolor=650, scoring='HALF')
-
+if (thisweek > 0) {
+	draw.tiers("flx", 20, 95, 14, XLOW=5, highcolor=650, scoring='STD')
+	draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='PPR')
+	draw.tiers("flx", 1, 80, 15, XLOW=5, highcolor=650, scoring='HALF')
+}

@@ -1,8 +1,20 @@
 import os 
 
-cmd1 = 'Rscript /home/ubuntu/projects/fftiers/src/main.R t'
+def set_path():
+	user = os.popen('whoami').read()[:-1]
+	if user == 'bchen':
+		mypath = '/Users/bchen/projects/fftiers'
+	elif user == 'borischen':
+		mypath = '/Users/borischen/projects/fftiers'
+	else:	
+		mypath = '/home/ubuntu/projects/fftiers'
+	return mypath
+
+head_path = set_path()
+
+cmd1 = 'Rscript %s/src/main.R t' % head_path
 os.system(cmd1)
 
-cmd2 = 'python /home/ubuntu/projects/fftiers/src/push-to-s3.py'
+cmd2 = 'python %s/src/push-to-s3.py' % head_path
 os.system(cmd2)
 
