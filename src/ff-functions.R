@@ -53,7 +53,8 @@ download.predraft.data <- function() {
 	base_dest = '~/projects/fftiers/dat/2018/week-0-ALL-HALF-PPR-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
-	download.py.call(dest, csv_dest, position='ALL', scoring='half-point-ppr')
+	#download.py.call(dest, csv_dest, position='ALL', scoring='half-point-ppr')
+	download.py.call(dest, csv_dest, position='ALL', scoring='HALF')
 }  
 
 is.tpos.all <- function(tpos) {

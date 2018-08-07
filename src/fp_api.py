@@ -21,7 +21,8 @@ def perform_session_download(year, position, week, scoring, json_path):
 	curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
 	""".format(year, position, week, scoring, filters, api_key, json_path)
 	
-	if day_of_week == 1:
+	#if (day_of_week == 1) or (week == 0):
+	if True:
 		curl_str = """
 		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}" -H "x-api-key: {}" > {}	
 		""".format(year, position, week, scoring, api_key, json_path)
