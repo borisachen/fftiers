@@ -39,17 +39,19 @@ system(paste('rm ', gd.outputdirpng, '*', sep=''))
 system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 
 ## If there are any injured players, list them here to remove them
-injured <- c('')
+injured <- c('Jerick McKinnon')
 
 ### Predraft data
 if (download == TRUE) download.predraft.data()
 
-scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
-for (scoring.type in scoring.type.list) {
-	high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720, save=FALSE)
-	nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
-	nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
-	nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+if (FALSE) {
+	scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
+	for (scoring.type in scoring.type.list) {
+		high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720, save=FALSE)
+		nt.std.1 = draw.tiers(scoring.type, 1, high.level.tiers[1], 10, XLOW=10, highcolor=720)
+		nt.std.2 = draw.tiers(scoring.type, high.level.tiers[1]+1, high.level.tiers[1]+high.level.tiers[2], 8, adjust=1, XLOW=18, highcolor=720, num.higher.tiers=length(nt.std.1))
+		nt.std.3 = draw.tiers(scoring.type, high.level.tiers[1]+high.level.tiers[2]+1, high.level.tiers[1]+high.level.tiers[2]+high.level.tiers[3], 8, adjust=2, XLOW=20, highcolor=720, num.higher.tiers=(length(nt.std.1)+length(nt.std.2)))
+	}
 }
 
 

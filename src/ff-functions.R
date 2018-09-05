@@ -80,6 +80,7 @@ debug.comment <- function() {
 
 draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highcolor=360, num.higher.tiers=0, scoring='STD', save=TRUE) {
 	# pos='all'; low=1; high=100; k=3; adjust=0; XLOW=0; highcolor=360; num.higher.tiers=0; scoring='STD'
+	# pos='QB'; low=1; high=20; k=6; adjust=0; XLOW=0; highcolor=360; num.higher.tiers=0; scoring='STD'
 	position = toupper(pos); 
 	pos.scoring = paste(position, scoring, sep='-')
 	tpos = pos.scoring
@@ -199,7 +200,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	if (tpos %in% "ALL")   {font = 2.4; barsize=1;    dotsize=0.8;   }
 	if (tpos %in% "all")   {font = 2.4; barsize=1;    dotsize=0.8;   }
 	
-	p = ggplot(this.pos, aes(x=position.rank, y=Avg.Rank))
+	#p = ggplot(this.pos, aes(x=position.rank, y=Avg.Rank))
+	p = ggplot(this.pos, aes(x=-Rank, y=Avg.Rank))
 	p = p + ggtitle(title) + theme(plot.title = element_text(hjust = 0.5))
     p = p + geom_errorbar(aes(ymin = Avg.Rank - Std.Dev/2, ymax = Avg.Rank + Std.Dev/2, width=0.2, colour=Tier), size=barsize*0.8, alpha=0.4)
 	p = p + geom_point(colour="grey20", size=dotsize) 
@@ -211,9 +213,9 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/5 - Std.Dev/1.5), size=font) 
 	if (tpos %in% tinyfont)     			
     	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) 
-    if ((tpos == 'ALL') | (tpos == 'ALL-PPR'))
-    	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) 
-    	p = p + geom_text(aes(label=Position, y = Avg.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') 
+    if ((tpos == 'ALL') | (tpos == 'ALL-PPR')) {
+        	p = p + geom_text(aes(label=Player.Name, colour=Tier, y = Avg.Rank - nchar/3 - Std.Dev/1.8), size=font) 
+        	p = p + geom_text(aes(label=Position, y = Avg.Rank + Std.Dev/1.8 + 1), size=font, colour='#888888') }
     p = p + scale_x_continuous("Expert Consensus Rank")
     p = p + ylab("Average Expert Rank")
     p = p + theme(legend.justification=c(1,1), legend.position=c(1,1))
