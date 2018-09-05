@@ -86,7 +86,7 @@ draw.tiers("wr", 1, 60, 10, highcolor=400, XLOW=10, scoring='HALF')
 draw.tiers("te", 1, 25, 7, scoring='HALF')
 
 if (thisweek > 0) {
-	draw.tiers("flx", 20, 95, 14, XLOW=5, highcolor=650, scoring='STD')
-	draw.tiers("flx", 1, 80, 14, XLOW=5, highcolor=650, scoring='PPR')
-	draw.tiers("flx", 1, 80, 15, XLOW=5, highcolor=650, scoring='HALF')
+	draw.tiers("flx", 25, 100, 14, XLOW=5, highcolor=650, scoring='STD')
+	draw.tiers("flx", 25, 100, 14, XLOW=5, highcolor=650, scoring='PPR')
+	draw.tiers("flx", 25, 100, 15, XLOW=5, highcolor=650, scoring='HALF')
 }
