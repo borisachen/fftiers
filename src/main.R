@@ -2,7 +2,7 @@ require('mclust')
 require('ggplot2')
 source('~/projects/fftiers/src/ff-functions.R')
 
-### Parameters 
+### Parameters
 options(echo=TRUE)
 args 	<- commandArgs(trailingOnly = TRUE)
 if (length(args) != 1) {
@@ -13,16 +13,16 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2018-09-04", format="%Y-%m-%d"))/7))+1
+thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2019-09-04", format="%Y-%m-%d"))/7))+1
 thisweek 		= max(0, thisweek) # 0 for pre-draft
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
-year			= 2018
+year			= 2019
 #download = FALSE		# Do we want to download fresh data from fantasypros?
 
 ### Set and create input / output directories
 
-mkdir <- function(dir){ 
+mkdir <- function(dir){
 	system(paste("mkdir -p", dir))
 }
 datdir = "~/projects/fftiers/dat/2017/"; mkdir(datdir)
@@ -39,12 +39,12 @@ system(paste('rm ', gd.outputdirpng, '*', sep=''))
 system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 
 ## If there are any injured players, list them here to remove them
-injured <- c('Jerick McKinnon')
+injured <- c('')
 
 ### Predraft data
 if (download == TRUE) download.predraft.data()
 
-if (FALSE) {
+if (TRUE) {
 	scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
 	for (scoring.type in scoring.type.list) {
 		high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720, save=FALSE)
@@ -59,13 +59,13 @@ if (download == TRUE) {
 	download.data(c('qb','k','dst'))
 	if (thisweek == 0) {
 		download.data(c('rb','wr','te'), scoring='STD')
-		download.data(c('rb','wr','te'), scoring='PPR') 
+		download.data(c('rb','wr','te'), scoring='PPR')
 		download.data(c('rb','wr','te'), scoring='HALF')
 	}
 	if (thisweek > 0) {
 		download.data(c('flx','rb','wr','te'), scoring='STD')
-		download.data(c('flx','rb','wr','te'), scoring='PPR') 
-		download.data(c('flx','rb','wr','te'), scoring='HALF')	
+		download.data(c('flx','rb','wr','te'), scoring='PPR')
+		download.data(c('flx','rb','wr','te'), scoring='HALF')
 	}
 }
 

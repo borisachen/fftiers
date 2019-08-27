@@ -5,7 +5,7 @@ import datetime
 
 def perform_session_download(year, position, week, scoring, json_path):
 	"""
-	year = '2018'
+	year = '2019'
 	position = 'RB'
 	week = '9'
 	scoring = 'STD'
@@ -17,12 +17,13 @@ def perform_session_download(year, position, week, scoring, json_path):
 	day_of_week = datetime.datetime.today().weekday()
 	make_path()
 
-	curl_str = """
-	curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
-	""".format(year, position, week, scoring, filters, api_key, json_path)
+	if False:
+		curl_str = """
+		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
+		""".format(year, position, week, scoring, filters, api_key, json_path)
 	
-	#if False:
-	if (day_of_week == 1) or (day_of_week == 2) or (week == 0):
+	if True:
+	#if (day_of_week == 1) or (day_of_week == 2) or (week == 0):
 		curl_str = """
 		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}" -H "x-api-key: {}" > {}	
 		""".format(year, position, week, scoring, api_key, json_path)
@@ -32,7 +33,7 @@ def perform_session_download(year, position, week, scoring, json_path):
 
 def make_path():
 	try:
-		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2018/')
+		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2019/')
 	except:
 		pass
 
@@ -93,4 +94,4 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	perform_session_download(args.year, args.position, args.week, args.scoring, args.json_path)
 	convertJsonToCsv(args.json_path, args.csv_file_name, int(args.week))
-	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2018/week-0-all-raw.txt', 'foo.csv', 0)
+	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2019/week-0-all-raw.txt', 'foo.csv', 0)
