@@ -42,9 +42,8 @@ system(paste('rm ', gd.outputdirtxt, '*', sep=''))
 injured <- c('')
 
 ### Predraft data
-if (download == TRUE) download.predraft.data()
-
-if (TRUE) {
+if (thisweek == 0) download.predraft.data()
+if (thisweek == 0) {
 	scoring.type.list = c('all', 'all-ppr', 'all-half-ppr')
 	for (scoring.type in scoring.type.list) {
 		high.level.tiers = draw.tiers(scoring.type, 1, 200, 3, XLOW=5, highcolor=720, save=FALSE)
