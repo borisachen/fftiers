@@ -13,7 +13,7 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2019-09-04", format="%Y-%m-%d"))/7))+1
+thisweek 		= as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date("2019-09-03", format="%Y-%m-%d"))/7))+1
 thisweek 		= max(0, thisweek) # 0 for pre-draft
 download.ros 	= FALSE
 useold 			= FALSE		# Do we want to use the original version of the charts?
