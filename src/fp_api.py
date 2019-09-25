@@ -76,7 +76,10 @@ def convertJsonToCsv(json_path, out_csv, week):
 
 
 def getAPIKey():
-	return '7B7tSChOlX7qQ10DjsRX44Dvah6S1HwL5bWU0mbp'
+	with open('api_key.py', 'r') as f:
+		lines = f.readlines()
+	key = lines[0][:-1]
+	return key
 
 
 if __name__ == "__main__":

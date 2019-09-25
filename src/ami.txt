@@ -6,7 +6,7 @@ sudo apt-get install make
 make
 sudo make install
 
-R
+sudo apt install r-base-core
 install.packages('mclust')
 install.packages('plyr')
 install.packages('reshape2')
