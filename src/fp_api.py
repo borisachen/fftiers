@@ -5,7 +5,7 @@ import datetime
 
 def perform_session_download(year, position, week, scoring, json_path):
 	"""
-	year = '2019'
+	year = '2020'
 	position = 'RB'
 	week = '9'
 	scoring = 'STD'
@@ -19,21 +19,21 @@ def perform_session_download(year, position, week, scoring, json_path):
 
 	if False:
 		curl_str = """
-		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}	
+		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}&filters={}" -H "x-api-key: {}" > {}
 		""".format(year, position, week, scoring, filters, api_key, json_path)
-	
+
 	if True:
 	#if (day_of_week == 1) or (day_of_week == 2) or (week == 0):
 		curl_str = """
-		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}" -H "x-api-key: {}" > {}	
+		curl "https://api.fantasypros.com/public/v2/json/nfl/{}/consensus-rankings?position={}&week={}&scoring={}" -H "x-api-key: {}" > {}
 		""".format(year, position, week, scoring, api_key, json_path)
-	
+
 	print(curl_str)
 	os.system(curl_str)
 
 def make_path():
 	try:
-		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2019/')
+		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2020/')
 	except:
 		pass
 
@@ -58,7 +58,7 @@ def playerToRow(player, week):
 
 
 def convertJsonToCsv(json_path, out_csv, week):
-	with open(json_path) as data_file:    
+	with open(json_path) as data_file:
 		data = json.load(data_file)
 	rows = []
 	if week == 0:
@@ -85,7 +85,7 @@ def getAPIKey():
 if __name__ == "__main__":
 	"""
 	python /Users/borischen/projects/fftiers/src/fp_dl.py
-	python /home/ubuntu/projects/fftiers/src/fp_dl.py 
+	python /home/ubuntu/projects/fftiers/src/fp_dl.py
 	"""
 	parser = argparse.ArgumentParser("FantasyPros clustering program")
 	parser.add_argument('-j', dest='json_path', help="JSON Destination", required=True)
@@ -97,4 +97,4 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	perform_session_download(args.year, args.position, args.week, args.scoring, args.json_path)
 	convertJsonToCsv(args.json_path, args.csv_file_name, int(args.week))
-	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2019/week-0-all-raw.txt', 'foo.csv', 0)
+	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2020/week-0-all-raw.txt', 'foo.csv', 0)

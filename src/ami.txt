@@ -4,7 +4,9 @@ sudo apt-get install yum
 sudo apt-get install build-essential
 sudo yum -y install make libX11-devel.* libICE-devel.* libSM-devel.* libdmx-devel.* libx* xorg-x11* libFS*
 wget http://cran.r-project.org/src/base/R-3/R-3.1.0.tar.gz
+# wget http://cran.r-project.org/src/base/R-3/R-3.6.1.tar.gz
 tar zxf R-3.1.0.tar.gz && cd R-3.1.0
+tar zxf R-3.6.1.tar.gz && cd R-3.6.1
 sudo apt-get install make
 sudo apt-get install gfortran
 ./configure --with-readline=no --with-x=no
