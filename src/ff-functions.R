@@ -1,6 +1,6 @@
 
 download.py.call <- function(json_dest, csv_dest, position, scoring) {
-	year = '2020'
+	year = '2021'
 	me = system('whoami', intern = TRUE)
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
@@ -18,7 +18,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		for (mp in pos.list) {
 			Sys.sleep(1)
 			position = toupper(mp)
-		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2020/week-', thisweek, '-',mp,'-raw.txt', sep='')
+		 	#rmold1 = paste('rm ~/projects/fftiers/dat/2021/week-', thisweek, '-',mp,'-raw.txt', sep='')
 		 	#system(rmold1)
 		 	if (thisweek == 0)
 		 		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'-cheatsheets.php', sep='')
@@ -26,7 +26,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-		  	head.dir = '~/projects/fftiers/dat/2020/week-'
+		  	head.dir = '~/projects/fftiers/dat/2021/week-'
 		  	pos.scoring = paste(position, scoring, sep='-')
 		  	json_dest = paste(head.dir, thisweek, '-', pos.scoring, '.json', sep="")
 			csv_dest = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
@@ -40,17 +40,17 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 download.predraft.data <- function() {
 	# overall rankings download:
 
-	base_dest = '~/projects/fftiers/dat/2020/week-0-ALL-STD-raw'
+	base_dest = '~/projects/fftiers/dat/2021/week-0-ALL-STD-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	download.py.call(dest, csv_dest, position='ALL', scoring='STD')
 
-	base_dest = '~/projects/fftiers/dat/2020/week-0-ALL-PPR-raw'
+	base_dest = '~/projects/fftiers/dat/2021/week-0-ALL-PPR-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	download.py.call(dest, csv_dest, position='ALL', scoring='PPR')
 
-	base_dest = '~/projects/fftiers/dat/2020/week-0-ALL-HALF-PPR-raw'
+	base_dest = '~/projects/fftiers/dat/2021/week-0-ALL-HALF-PPR-raw'
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	#download.py.call(dest, csv_dest, position='ALL', scoring='half-point-ppr')
@@ -84,7 +84,7 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 	position = toupper(pos);
 	pos.scoring = paste(position, scoring, sep='-')
 	tpos = pos.scoring
-	head.dir = '~/projects/fftiers/dat/2020/week-'
+	head.dir = '~/projects/fftiers/dat/2021/week-'
 	csv_path = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
 	if (pos == 'all-ppr') csv_path 		= paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
 	if (pos == 'all-half-ppr') csv_path = paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
@@ -122,8 +122,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	curr.time = substr(curr.time, 1, nchar(curr.time)-3)
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2020 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2020 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2021 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2021 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	#dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]

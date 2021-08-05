@@ -5,7 +5,7 @@ import datetime
 
 def perform_session_download(year, position, week, scoring, json_path):
 	"""
-	year = '2020'
+	year = '2021'
 	position = 'RB'
 	week = '9'
 	scoring = 'STD'
@@ -33,7 +33,7 @@ def perform_session_download(year, position, week, scoring, json_path):
 
 def make_path():
 	try:
-		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2020/')
+		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2021/')
 	except:
 		pass
 
@@ -97,4 +97,4 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	perform_session_download(args.year, args.position, args.week, args.scoring, args.json_path)
 	convertJsonToCsv(args.json_path, args.csv_file_name, int(args.week))
-	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2020/week-0-all-raw.txt', 'foo.csv', 0)
+	#convertJsonToCsv('/Users/bchen/projects/fftiers/dat/2021/week-0-all-raw.txt', 'foo.csv', 0)
