@@ -29,7 +29,9 @@ def set_path():
 		mypath = '/Users/bchen/projects/fftiers/out/current/'
 	elif user == 'borischen':
 		mypath = '/Users/borischen/projects/fftiers/out/current/'
-	else:	
+	elif user == 'root':
+		mypath = '/root/projects/fftiers/out/current/'
+	else:
 		mypath = '/home/ubuntu/projects/fftiers/out/'
 	return mypath
 
