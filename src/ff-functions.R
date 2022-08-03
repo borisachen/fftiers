@@ -5,7 +5,11 @@ download.py.call <- function(json_dest, csv_dest, position, scoring) {
 	parent = 'Users'
 	if (me=='ubuntu') parent = 'home'
 	if (me=='borischen') parent = 'Users'
+	if (me=='root') parent = 'root'
 	api_call = paste('python3 /',parent,'/',me,'/projects/fftiers/src/fp_api.py -j ',json_dest,' -c ',csv_dest,' -y ',year,' -p ',position,' -w ',thisweek,' -s ',scoring,sep='')
+	if (me=='root') {
+		api_call = paste('python3 /',me,'/projects/fftiers/src/fp_api.py -j ',json_dest,' -c ',csv_dest,' -y ',year,' -p ',position,' -w ',thisweek,' -s ',scoring,sep='')
+	}
 	#dl_call = paste('python3 /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,' -n ',ncol,sep='')
 	print(api_call)
 	system(api_call)
