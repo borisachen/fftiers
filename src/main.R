@@ -1,3 +1,5 @@
+# install.packages("ggplot2", dependencies = TRUE)
+# install.packages("mclust", dependencies = TRUE)
 require('mclust')
 require('ggplot2')
 source('~/projects/fftiers/src/ff-functions.R')
