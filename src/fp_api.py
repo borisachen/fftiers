@@ -33,7 +33,7 @@ def perform_session_download(year, position, week, scoring, json_path):
 
 def make_path():
 	try:
-		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2022/')
+		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2023/')
 	except:
 		pass
 
