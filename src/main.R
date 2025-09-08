@@ -17,8 +17,8 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-year			     = 2024
-weekonetuesday = "2024-09-03"  # Put the date of the Tuesday of Week 1 here.
+year			     = 2025
+weekonetuesday = "2025-09-02"  # Put the date of the Tuesday of Week 1 here.
 thisweek 		   = as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date(weekonetuesday, format="%Y-%m-%d"))/7))+1
 thisweek 		   = max(0, thisweek) # 0 for pre-draft
 download.ros 	 = FALSE
@@ -31,7 +31,7 @@ useold 			   = FALSE	# Do we want to use the original version of the charts?
 mkdir <- function(dir){
 	system(paste("mkdir -p", dir))
 }
-datdir = "~/projects/fftiers/dat/2024/"; mkdir(datdir)
+datdir = "~/projects/fftiers/dat/2025/"; mkdir(datdir)
 outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(outputdir)
 outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
 outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
