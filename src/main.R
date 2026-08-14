@@ -2,7 +2,27 @@
 # install.packages("mclust", dependencies = TRUE)
 require('mclust')
 require('ggplot2')
-source('~/projects/fftiers/src/ff-functions.R')
+
+get_fftiers_root <- function() {
+	args_all <- commandArgs(trailingOnly = FALSE)
+	script_arg <- sub("^--file=", "", args_all[grep("^--file=", args_all)])
+	if (length(script_arg)) {
+		return(normalizePath(file.path(dirname(script_arg), "..")))
+	}
+	env_root <- Sys.getenv("FFTIERS_ROOT", unset = "")
+	if (nzchar(env_root)) {
+		return(normalizePath(env_root))
+	}
+	mac_path <- file.path(Sys.getenv("HOME"), "projects", "fftiers")
+	if (file.exists(file.path(mac_path, "src", "main.R"))) {
+		return(normalizePath(mac_path))
+	}
+	stop("Could not locate fftiers repo root; set FFTIERS_ROOT or run via Rscript main.R")
+}
+
+fftiers.root <- get_fftiers_root()
+year <- 2026
+source(file.path(fftiers.root, "src", "ff-functions.R"))
 
 ### Parameters
 options(echo=TRUE)
@@ -17,8 +37,8 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-year			     = 2025
-weekonetuesday = "2025-09-02"  # Put the date of the Tuesday of Week 1 here.
+year			     = year
+weekonetuesday = "2026-09-08"  # Put the date of the Tuesday of Week 1 here.
 thisweek 		   = as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date(weekonetuesday, format="%Y-%m-%d"))/7))+1
 thisweek 		   = max(0, thisweek) # 0 for pre-draft
 download.ros 	 = FALSE
@@ -31,18 +51,18 @@ useold 			   = FALSE	# Do we want to use the original version of the charts?
 mkdir <- function(dir){
 	system(paste("mkdir -p", dir))
 }
-datdir = "~/projects/fftiers/dat/2025/"; mkdir(datdir)
-outputdir = paste("~/projects/fftiers/out/week", thisweek, "/", sep=""); mkdir(outputdir)
-outputdircsv = paste("~/projects/fftiers/out/week", thisweek, "/csv/", sep=""); mkdir(outputdircsv)
-outputdirpng = paste("~/projects/fftiers/out/week", thisweek, "/png/", sep=""); mkdir(outputdirpng)
-outputdirtxt = paste("~/projects/fftiers/out/week", thisweek, "/txt/", sep=""); mkdir(outputdirtxt)
-gd.outdir = "~/projects/fftiers/out/current/"; mkdir(gd.outdir)
-gd.outputdircsv = paste(gd.outdir, "csv/", sep=""); mkdir(gd.outputdircsv)
-gd.outputdirpng = paste(gd.outdir, "png/", sep=""); mkdir(gd.outputdirpng)
-gd.outputdirtxt = paste(gd.outdir, "txt/", sep=""); mkdir(gd.outputdirtxt)
-system(paste('rm ', gd.outputdircsv, '*', sep=''))
-system(paste('rm ', gd.outputdirpng, '*', sep=''))
-system(paste('rm ', gd.outputdirtxt, '*', sep=''))
+datdir = file.path(fftiers.root, "dat", year); mkdir(datdir)
+outputdir = file.path(fftiers.root, "out", paste0("week", thisweek)); mkdir(outputdir)
+outputdircsv = file.path(outputdir, "csv"); mkdir(outputdircsv)
+outputdirpng = file.path(outputdir, "png"); mkdir(outputdirpng)
+outputdirtxt = file.path(outputdir, "txt"); mkdir(outputdirtxt)
+gd.outdir = file.path(fftiers.root, "out", "current"); mkdir(gd.outdir)
+gd.outputdircsv = file.path(gd.outdir, "csv"); mkdir(gd.outputdircsv)
+gd.outputdirpng = file.path(gd.outdir, "png"); mkdir(gd.outputdirpng)
+gd.outputdirtxt = file.path(gd.outdir, "txt"); mkdir(gd.outputdirtxt)
+system(paste('rm -f', file.path(gd.outputdircsv, '*')))
+system(paste('rm -f', file.path(gd.outputdirpng, '*')))
+system(paste('rm -f', file.path(gd.outputdirtxt, '*')))
 
 ## If there are any injured players, list them here to remove them
 injured <- c('')

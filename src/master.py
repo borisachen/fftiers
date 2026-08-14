@@ -1,14 +1,7 @@
-import os 
+import os
 
 def set_path():
-	user = os.popen('whoami').read()[:-1]
-	if user == 'bchen':
-		mypath = '/Users/bchen/projects/fftiers'
-	elif user == 'borischen':
-		mypath = '/Users/borischen/projects/fftiers'
-	else:	
-		mypath = '/home/ubuntu/projects/fftiers'
-	return mypath
+	return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 head_path = set_path()
 

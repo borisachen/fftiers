@@ -1,16 +1,15 @@
 
 download.py.call <- function(json_dest, csv_dest, position, scoring) {
-	year = '2025'
-	me = system('whoami', intern = TRUE)
-	parent = 'Users'
-	if (me=='ubuntu') parent = 'home'
-	if (me=='borischen') parent = 'Users'
-	if (me=='root') parent = 'root'
-	api_call = paste('python3 /',parent,'/',me,'/projects/fftiers/src/fp_api.py -j ',json_dest,' -c ',csv_dest,' -y ',year,' -p ',position,' -w ',thisweek,' -s ',scoring,sep='')
-	if (me=='root') {
-		api_call = paste('python3 /',me,'/projects/fftiers/src/fp_api.py -j ',json_dest,' -c ',csv_dest,' -y ',year,' -p ',position,' -w ',thisweek,' -s ',scoring,sep='')
-	}
-	#dl_call = paste('python3 /',parent,'/',me,'/projects/fftiers/src/fp_dl.py -u ',url,' -d ',dest,' -c ',csv_dest,' -n ',ncol,sep='')
+	fp_api = file.path(fftiers.root, "src", "fp_api.py")
+	api_call = paste(
+		"python3", shQuote(fp_api),
+		"-j", shQuote(path.expand(json_dest)),
+		"-c", shQuote(path.expand(csv_dest)),
+		"-y", year,
+		"-p", position,
+		"-w", thisweek,
+		"-s", scoring
+	)
 	print(api_call)
 	system(api_call)
 }
@@ -29,7 +28,7 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 		  		url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?week=',thisweek,'\\&export=xls', sep='')
 
 		  	#url = paste('https://www.fantasypros.com/nfl/rankings/',mp,'.php?filters=64:113:120:125:127:317:406:534\\&week=',thisweek,'\\&export=xls', sep='')
-		  	head.dir = '~/projects/fftiers/dat/2025/week-'
+		  	head.dir = paste0(file.path(fftiers.root, "dat", year), "/week-")
 		  	pos.scoring = paste(position, scoring, sep='-')
 		  	json_dest = paste(head.dir, thisweek, '-', pos.scoring, '.json', sep="")
 			csv_dest = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
@@ -43,17 +42,17 @@ download.data <- function(pos.list=c('rb','wr','te','flx'), scoring='STD') {
 download.predraft.data <- function() {
 	# overall rankings download:
 
-	base_dest = '~/projects/fftiers/dat/2025/week-0-ALL-STD-raw'
+	base_dest = file.path(fftiers.root, "dat", year, "week-0-ALL-STD-raw")
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	download.py.call(dest, csv_dest, position='ALL', scoring='STD')
 
-	base_dest = '~/projects/fftiers/dat/2025/week-0-ALL-PPR-raw'
+	base_dest = file.path(fftiers.root, "dat", year, "week-0-ALL-PPR-raw")
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	download.py.call(dest, csv_dest, position='ALL', scoring='PPR')
 
-	base_dest = '~/projects/fftiers/dat/2025/week-0-ALL-HALF-PPR-raw'
+	base_dest = file.path(fftiers.root, "dat", year, "week-0-ALL-HALF-PPR-raw")
 	dest = paste(base_dest, '.txt',sep='')
 	csv_dest = paste(base_dest, '.csv',sep='')
 	#download.py.call(dest, csv_dest, position='ALL', scoring='half-point-ppr')
@@ -87,7 +86,7 @@ draw.tiers <- function(pos='all', low=1, high=100, k=3, adjust=0, XLOW=0, highco
 	position = toupper(pos);
 	pos.scoring = paste(position, scoring, sep='-')
 	tpos = pos.scoring
-	head.dir = '~/projects/fftiers/dat/2025/week-'
+	head.dir = paste0(file.path(fftiers.root, "dat", year), "/week-")
 	csv_path = paste(head.dir, thisweek, '-', pos.scoring ,'-raw.csv', sep="")
 	if (pos == 'all-ppr') csv_path 		= paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
 	if (pos == 'all-half-ppr') csv_path = paste(head.dir, thisweek, '-', position ,'-raw.csv', sep="")
@@ -125,8 +124,8 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	curr.time = substr(curr.time, 1, nchar(curr.time)-3)
 	if (tpos!='ALL') title = paste("Week ",thisweek," - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
 	if (tpos=='ALL') title = paste("Pre-draft Tiers - Top 200", ' - ', curr.time, sep="")
-	if ((thisweek==0) && (tpos!='ALL')) title = paste("2025 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
-	if ((thisweek==0) && (tpos=='ALL')) title = paste("2025 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos!='ALL')) title = paste("2026 Draft - ",tpos," Tiers", ' - ', curr.time, ' PST', sep="")
+	if ((thisweek==0) && (tpos=='ALL')) title = paste("2026 Draft - Top 200 Tiers", ' - ', curr.time, ' PST', sep="")
 	#dat$Rank = 1:nrow(dat)
 	this.pos = dat
 	this.pos = this.pos[low:high,]
@@ -156,18 +155,18 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
 	}
 
 	# Print out names
-	txt.path 	= paste(outputdirtxt,"text_",tpos,".txt",sep="")
-	gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,".txt",sep="")
+	txt.path 	= file.path(outputdirtxt, paste0("text_", tpos, ".txt"))
+	gd.txt.path = file.path(gd.outputdirtxt, paste0("text_", tpos, ".txt"))
 	if (is.tpos.all(tpos)) {
-		txt.path 	= paste(outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
-		gd.txt.path = paste(gd.outputdirtxt,"text_",tpos,'-adjust',adjust,".txt",sep="")
+		txt.path 	= file.path(outputdirtxt, paste0("text_", tpos, '-adjust', adjust, ".txt"))
+		gd.txt.path = file.path(gd.outputdirtxt, paste0("text_", tpos, '-adjust', adjust, ".txt"))
 	}
 
 
 	if (file.exists(txt.path)) system(paste('rm', txt.path))
 	fileConn <- file(txt.path)
 	gd.fileConn <- file(gd.txt.path)
-	if (is.tpos.all(tpos)) fileConn<-file(paste(outputdirtxt,"text_",tpos,'-adjust', num.higher.tiers,".txt",sep=""))
+	if (is.tpos.all(tpos)) fileConn<-file(file.path(outputdirtxt, paste0("text_", tpos, '-adjust', num.higher.tiers, ".txt")))
 	tier.list = array("", k)
 	bad.rows = c()
 
@@ -230,19 +229,19 @@ error.bar.plot <- function(pos="NA", low=1, high=24, k=8, format="NA", title="du
     if ((tpos == "FLX") | (tpos=="FLX-PPR")| (tpos=="WR-PPR")  | (tpos == "FLX-HALF") | (tpos == "WR-HALF")) p = p + ylim(0-XLOW, maxy)
 	if ((tpos == 'ALL') |(tpos == 'WR') | (tpos == 'ALL-PPR') | (tpos == 'ALL-HALF-PPR')) p = p + ylim(low-XLOW, maxy+5)
 
-	outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos, ".png", sep="")
-	gd.outfile 	= paste(gd.outputdirpng, "weekly-", tpos, ".png", sep="")
+	outfile 	= file.path(outputdirpng, paste0("week-", thisweek, "-", tpos, ".png"))
+	gd.outfile 	= file.path(gd.outputdirpng, paste0("weekly-", tpos, ".png"))
 	if (is.tpos.all(tpos)) {
-		outfile 	= paste(outputdirpng, "week-", thisweek, "-", tpos,'-adjust',adjust, ".png", sep="")
-		gd.outfile 	= paste(gd.outputdirpng, "weekly-", tpos,'-adjust',adjust, ".png", sep="")
+		outfile 	= file.path(outputdirpng, paste0("week-", thisweek, "-", tpos, '-adjust', adjust, ".png"))
+		gd.outfile 	= file.path(gd.outputdirpng, paste0("weekly-", tpos, '-adjust', adjust, ".png"))
 	}
 
 	# write the table to csv
-	outfilecsv = paste(outputdircsv, "week-", thisweek, "-", tpos, ".csv", sep="")
-	gd.outfilecsv = paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
+	outfilecsv = file.path(outputdircsv, paste0("week-", thisweek, "-", tpos, ".csv"))
+	gd.outfilecsv = file.path(gd.outputdircsv, paste0("weekly-", tpos, ".csv"))
 	if (is.tpos.all(tpos)) {
-		outfilecsv 		= paste(outputdircsv, "week-", thisweek, "-", tpos,'-adjust',adjust, ".csv", sep="")
-		gd.outfilecsv 	= paste(gd.outputdircsv, "weekly-", tpos, ".csv", sep="")
+		outfilecsv 		= file.path(outputdircsv, paste0("week-", thisweek, "-", tpos, '-adjust', adjust, ".csv"))
+		gd.outfilecsv 	= file.path(gd.outputdircsv, paste0("weekly-", tpos, ".csv"))
 	}
 	this.pos$position.rank <- this.pos$X <- this.pos$mcluster <- this.pos$nchar <- NULL
 

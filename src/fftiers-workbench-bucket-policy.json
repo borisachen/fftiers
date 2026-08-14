@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowWorkbenchListOutPrefix",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::219382154434:role/TitusContainerRole"
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::fftiers",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": ["out/*"]
+        }
+      }
+    },
+    {
+      "Sid": "AllowWorkbenchWriteOutPrefix",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::219382154434:role/TitusContainerRole"
+      },
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::fftiers/out/*"
+    }
+  ]
+}

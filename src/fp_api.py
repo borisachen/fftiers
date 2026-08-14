@@ -15,7 +15,7 @@ def perform_session_download(year, position, week, scoring, json_path):
 	api_key = getAPIKey()
 	filters = '64:113:120:125:127:317:406:534'
 	day_of_week = datetime.datetime.today().weekday()
-	make_path()
+	make_path(year)
 
 	if False:
 		curl_str = """
@@ -31,11 +31,13 @@ def perform_session_download(year, position, week, scoring, json_path):
 	print(curl_str)
 	os.system(curl_str)
 
-def make_path():
-	try:
-		os.system('mkdir -p /Users/bchen/projects/fftiers/dat/2024/')
-	except:
-		pass
+def repo_root():
+	return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def make_path(year=None):
+	if year is None:
+		year = datetime.datetime.now().year
+	os.makedirs(os.path.join(repo_root(), 'dat', str(year)), exist_ok=True)
 
 def playerToRow(player, week):
 	try:
@@ -76,7 +78,8 @@ def convertJsonToCsv(json_path, out_csv, week):
 
 
 def getAPIKey():
-	with open('api_key.py', 'r') as f:
+	key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'api_key.py')
+	with open(key_path, 'r') as f:
 		lines = f.readlines()
 	key = lines[0][:-1]
 	return key

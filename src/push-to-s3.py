@@ -23,17 +23,10 @@ def FilesPaths(directory):
 			ans.append(f)
 	return ans
 
+import os
+
 def set_path():
-	user = os.popen('whoami').read()[:-1]
-	if user == 'bchen':
-		mypath = '/Users/bchen/projects/fftiers/out/current/'
-	elif user == 'borischen':
-		mypath = '/Users/borischen/projects/fftiers/out/current/'
-	elif user == 'root':
-		mypath = '/root/projects/fftiers/out/current/'
-	else:
-		mypath = '/home/ubuntu/projects/fftiers/out/'
-	return mypath
+	return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'out', 'current')
 
 mypath = set_path()
 files_to_push = absoluteFilePaths(mypath)
