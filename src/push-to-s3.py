@@ -1,13 +1,19 @@
 
+import argparse
 import os
 import subprocess
 
 S3_PREFIX = 's3://fftiers/out/'
 DEFAULT_PROFILE = 'personal'
+UPLOAD_SUBDIRS = ('png', 'csv', 'txt')
 
 
-def set_path():
-	return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'out', 'current')
+def repo_root():
+	return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def current_out_dir():
+	return os.path.join(repo_root(), 'out', 'current')
 
 
 def profile_exists(profile_name):
@@ -33,37 +39,47 @@ def configure_aws_profile():
 	return None
 
 
-def absolute_file_paths(directory):
-	paths = []
-	for dirpath, _, filenames in os.walk(directory):
-		for filename in filenames:
-			paths.append(os.path.abspath(os.path.join(dirpath, filename)))
-	return paths
-
-
-def file_names(directory):
-	names = []
-	for dirpath, _, filenames in os.walk(directory):
-		for filename in filenames:
-			names.append(filename)
-	return names
+def collect_uploads(base_dir):
+	uploads = []
+	for subdir in UPLOAD_SUBDIRS:
+		dir_path = os.path.join(base_dir, subdir)
+		if not os.path.isdir(dir_path):
+			raise SystemExit('Missing upload directory: %s' % dir_path)
+		files = [
+			name for name in os.listdir(dir_path)
+			if os.path.isfile(os.path.join(dir_path, name)) and not name.startswith('.')
+		]
+		if not files:
+			raise SystemExit('No files to upload in: %s' % dir_path)
+		for name in sorted(files):
+			uploads.append((
+				os.path.abspath(os.path.join(dir_path, name)),
+				S3_PREFIX + name,
+			))
+	return uploads
 
 
 def main():
+	parser = argparse.ArgumentParser(description='Upload fftiers out/current assets to S3')
+	parser.add_argument('--dry-run', action='store_true', help='Print uploads without calling aws s3 cp')
+	args = parser.parse_args()
+
 	profile = configure_aws_profile()
 	if profile:
 		print('Using AWS profile: %s' % profile, flush=True)
 	else:
 		print('Using default Workbench AWS credentials', flush=True)
 
-	mypath = set_path()
-	files_to_push = absolute_file_paths(mypath)
-	file_list = file_names(mypath)
+	uploads = collect_uploads(current_out_dir())
+	for local_path, dest in uploads:
+		if args.dry_run:
+			print('DRY RUN: %s -> %s' % (local_path, dest))
+		else:
+			print('Uploading %s -> %s' % (local_path, dest))
+			subprocess.check_call(['aws', 's3', 'cp', local_path, dest])
 
-	for i in range(len(files_to_push)):
-		dest = S3_PREFIX + file_list[i]
-		print('Uploading %s -> %s' % (files_to_push[i], dest))
-		subprocess.check_call(['aws', 's3', 'cp', files_to_push[i], dest])
+	if args.dry_run:
+		print('DRY RUN: %d file(s) would upload' % len(uploads), flush=True)
 
 
 if __name__ == '__main__':

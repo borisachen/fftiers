@@ -21,7 +21,7 @@ get_fftiers_root <- function() {
 }
 
 fftiers.root <- get_fftiers_root()
-year <- 2026
+source(file.path(fftiers.root, "src", "config.R"))
 source(file.path(fftiers.root, "src", "ff-functions.R"))
 
 ### Parameters
@@ -37,11 +37,11 @@ download = toupper(as.character(args[1]))
 if (download=='T') download = TRUE
 if (download=='F') download = FALSE
 
-year			     = year
-weekonetuesday = "2026-09-08"  # Put the date of the Tuesday of Week 1 here.
-thisweek 		   = as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date(weekonetuesday, format="%Y-%m-%d"))/7))+1
-thisweek 		   = max(0, thisweek) # 0 for pre-draft
-download.ros 	 = FALSE
+thisweek = as.numeric(floor((as.Date(Sys.Date(), format="%Y/%m/%d") - as.Date(weekonetuesday, format="%Y-%m-%d"))/7))+1
+thisweek = max(0, thisweek) # 0 for pre-draft
+cat(sprintf("fftiers: year=%s weekonetuesday=%s thisweek=%s download=%s\n",
+	year, weekonetuesday, thisweek, download))
+download.ros = FALSE
 useold 			   = FALSE	# Do we want to use the original version of the charts?
 
 #download = FALSE		# Do we want to download fresh data from fantasypros?
@@ -63,6 +63,8 @@ gd.outputdirtxt = file.path(gd.outdir, "txt"); mkdir(gd.outputdirtxt)
 system(paste('rm -f', file.path(gd.outputdircsv, '*')))
 system(paste('rm -f', file.path(gd.outputdirpng, '*')))
 system(paste('rm -f', file.path(gd.outputdirtxt, '*')))
+root_files = list.files(gd.outdir, full.names=TRUE, recursive=FALSE)
+if (length(root_files) > 0) unlink(root_files)
 
 ## If there are any injured players, list them here to remove them
 injured <- c('')

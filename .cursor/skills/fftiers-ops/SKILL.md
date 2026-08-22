@@ -11,10 +11,11 @@ Fantasy football tier charts for [borischen.co](https://www.borischen.co). Data 
 
 | Path | Purpose |
 |------|---------|
+| `src/config.R` | **Yearly config only:** `year`, `weekonetuesday` |
 | `src/main.R` | Entry point: download + chart generation |
 | `src/ff-functions.R` | Download helpers, clustering, ggplot output |
 | `src/fp_api.py` | FantasyPros API → JSON/CSV (`src/api_key.py` required, **never commit**) |
-| `src/push-to-s3.py` | Upload `out/current/` → `s3://fftiers/out/` |
+| `src/push-to-s3.py` | Upload `out/current/{png,csv,txt}/` → `s3://fftiers/out/` |
 | `src/master.py` | Cron wrapper: `main.R` then `push-to-s3.py` |
 | `dat/{year}/` | Raw downloaded data (gitignored) |
 | `out/current/{png,csv,txt}/` | Website-facing outputs (gitignored) |
@@ -24,17 +25,15 @@ Paths resolve from repo root via `fftiers.root` in `main.R` (script location, `F
 
 ## 1. Season rollover (annual, ~August)
 
-Precedent commits: `8b119b1` (2025), `6507e26` (2024) — small diff, same pattern each year.
+Precedent commits: `8b119b1` (2025), `6507e26` (2024) — now consolidated into `src/config.R`.
 
 ### Checklist
 
-1. Set `year` in `src/main.R` (numeric, e.g. `2026`).
-2. Set `weekonetuesday` to the **Tuesday before NFL Week 1** (opening kickoff is usually Thursday; 2026 opened Wednesday so Tuesday was `2026-09-08`).
-3. Update draft chart titles in `src/ff-functions.R` (`error.bar.plot`: `"YYYY Draft - ..."` strings).
-4. Data paths use `fftiers.root` + `year` — no hardcoded `dat/2025` left behind.
-5. `src/fp_api.py` `make_path(year)` creates `dat/{year}/` relative to repo root.
-6. Grep: `grep -rn "OLD_YEAR" src/` — should return nothing except docstring examples.
-7. Test: `cd src && Rscript main.R TRUE`
+1. Edit **`src/config.R` only**:
+   - `year` (numeric, e.g. `2027`)
+   - `weekonetuesday` — **Tuesday before NFL Week 1** (2026 opened Wednesday so Tuesday was `2026-09-08`)
+2. Grep: `grep -rn "OLD_YEAR" src/` — should return nothing except `config.R` and docstring examples.
+3. Test: `cd src && Rscript main.R TRUE`
 
 ### Week 1 Tuesday
 
@@ -59,23 +58,15 @@ Rscript main.R TRUE   # download fresh FantasyPros data + generate charts (~30s)
 Rscript main.R FALSE  # regenerate charts from existing dat/ only (~15s)
 ```
 
-`master.py` runs `main.R t` then `push-to-s3.py` (production cron).
+`master.py` runs `main.R t` then `push-to-s3.py` (production cron). Use `python3 src/master.py --dry-run` to generate and preview S3 uploads without pushing.
 
 ### Outputs
 
 - `out/current/png/weekly-*.png` → S3 `s3://fftiers/out/weekly-*.png`
 - `out/current/csv/weekly-*.csv`, `out/current/txt/text_*.txt` — same basename mapping
-- `push-to-s3.py` uploads by **filename only** (not subdir path), which matches the website layout
+- `push-to-s3.py` uploads **only** `out/current/png/`, `csv/`, `txt/` by **basename** to `s3://fftiers/out/<basename>` (matches website layout). Skips hidden files.
 
-### Stale file cleanup
-
-If `out/current/` has root-level junk (`pngweekly-*`, `csvweekly-*`, `txttext_*`) from old path bugs:
-
-```bash
-rm -f out/current/pngweekly-* out/current/csvweekly-* out/current/txttext_*
-```
-
-`main.R` clears `out/current/{png,csv,txt}/*` but not root-level orphans. Correct files live only in subdirs.
+`main.R` clears `out/current/{png,csv,txt}/*` and removes root-level orphans in `out/current/`.
 
 ## 3. S3 deploy
 
@@ -109,13 +100,19 @@ AWS_PROFILE=personal aws s3 rm s3://fftiers/out/_workbench-access-test.txt
 
 Do **not** run `push-to-s3.py` for access testing — it uploads all tier files.
 
+### Preview push (no upload)
+
+```bash
+python3 src/push-to-s3.py --dry-run
+```
+
 ### Full push
 
 ```bash
 python3 src/push-to-s3.py
 ```
 
-Confirm `out/current/` has only files under `png/`, `csv/`, `txt/` (no root junk) before pushing.
+Confirm `out/current/{png,csv,txt}/` are populated before pushing.
 
 ### Bucket policy (personal AWS account)
 
@@ -138,7 +135,7 @@ Stop instance in offseason to save ~60% annual cost.
 
 **Never commit:** `src/api_key.py`, `dat/`, `out/`, `~/.aws/credentials`
 
-**Safe to commit:** `src/*.R`, `src/*.py`, `src/fftiers-workbench-bucket-policy.json`
+**Safe to commit:** `src/config.R`, `src/*.R`, `src/*.py`, `src/fftiers-workbench-bucket-policy.json`
 
 Commit message style: `Update fftiers for YYYY with portable repo paths.` or `Use personal AWS profile for S3 uploads when available.`
 
@@ -149,5 +146,5 @@ Commit message style: `Update fftiers for YYYY with portable repo paths.` or `Us
 | `Could not locate fftiers repo root` | Run via `Rscript main.R` from `src/`, or set `FFTIERS_ROOT` |
 | `api_key.py` not found | Create `src/api_key.py` with FantasyPros key |
 | PutObject AccessDenied (Workbench) | Use `personal` profile, not default Titus role |
-| Wrong S3 filenames (`txttext_*`) | Remove root junk; re-run `main.R`; verify `file.path()` in `ff-functions.R` |
+| Wrong S3 filenames (`txttext_*`) | Re-run `main.R`; `push-to-s3.py` only uploads png/csv/txt subdirs |
 | `thisweek` wrong | Check `weekonetuesday` matches Tuesday before Week 1 |
