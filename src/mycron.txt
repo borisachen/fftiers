@@ -1,4 +1,2 @@
-#!/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
-MAILTO="boris.chen@gmail.com"
-0 * * * * python /home/ubuntu/projects/fftiers/src/master.py
+# Legacy EC2 hourly cron — replaced by Workbench schedule.
+# See src/crontab.example and src/cron-run.sh

@@ -17,6 +17,8 @@ Fantasy football tier charts for [borischen.co](https://www.borischen.co). Data 
 | `src/fp_api.py` | FantasyPros API → JSON/CSV (`src/api_key.py` required, **never commit**) |
 | `src/push-to-s3.py` | Upload `out/current/{png,csv,txt}/` → `s3://fftiers/out/` |
 | `src/master.py` | Cron wrapper: `main.R` then `push-to-s3.py` |
+| `src/cron-run.sh` | Date-aware cron gate → `master.py` |
+| `src/crontab.example` | Workbench crontab template |
 | `dat/{year}/` | Raw downloaded data (gitignored) |
 | `out/current/{png,csv,txt}/` | Website-facing outputs (gitignored) |
 | `out/week{N}/` | Per-week archive |
@@ -31,7 +33,8 @@ Precedent commits: `8b119b1` (2025), `6507e26` (2024) — now consolidated into 
 
 1. Edit **`src/config.R` only**:
    - `year` (numeric, e.g. `2027`)
-   - `weekonetuesday` — **Tuesday before NFL Week 1** (2026 opened Wednesday so Tuesday was `2026-09-08`)
+   - `weekonetuesday` — **Tuesday before NFL Week 1** (in-season cron starts this day)
+   - `season_end` — last in-season cron run (usually first Sunday in January; e.g. `2027-01-03` for 2026 season)
 2. Grep: `grep -rn "OLD_YEAR" src/` — should return nothing except `config.R` and docstring examples.
 3. Test: `cd src && Rscript main.R TRUE`
 
@@ -120,20 +123,52 @@ Cross-account write from Workbench requires bucket policy on `fftiers` granting 
 
 Note: bucket policy alone may not suffice — Workbench role may lack outbound S3 permission to external buckets. **`personal` profile is the reliable path.**
 
-## 4. Production EC2 (optional)
+## 4. Workbench cron (production)
 
-Cheapest reliable: **`t4g.micro`** (~$6/mo, 1 GB RAM) in `us-east-1`, Ubuntu, IAM role for S3 (no keys on instance).
+Runs on this Workbench at **6:00 AM Pacific** (`TZ=America/Los_Angeles`). Schedule dates come from **`src/config.R`** (`weekonetuesday`, `season_end`) — no edits to `cron-run.sh` needed at rollover.
 
-Cron (`src/mycron.txt` pattern):
+| Phase | When | Days |
+|-------|------|------|
+| Pre-draft | before `weekonetuesday` | Mon, Thu |
+| In-season | `weekonetuesday` → `season_end` | Tue, Thu, Sun |
+| Off-season | after `season_end` | none (wrapper exits) |
+
+### Install
+
+```bash
+chmod +x src/cron-run.sh
+mkdir -p logs
+crontab src/crontab.example
+crontab -l
 ```
-0 * * * * python /home/ubuntu/projects/fftiers/src/master.py
+
+Crontab fires daily at 6am; `src/cron-run.sh` gates on date + day-of-week. Uses `flock` to prevent overlap. Logs to `logs/cron.log`. Emails `boris.chen@gmail.com` on failure.
+
+### Test
+
+```bash
+./src/cron-run.sh              # respects schedule (skips on wrong day)
+./src/cron-run.sh --force      # run now regardless of schedule
+python3 src/master.py --dry-run
 ```
+
+### Workbench caveat
+
+`/root` persists, but the container may sleep when idle — missed 6am runs are not caught up. Use EC2 if guaranteed uptime is needed.
+
+### Post-season rollover
+
+Update `weekonetuesday` and `season_end` in `src/config.R` next August. Cron picks up new dates automatically.
+
+## 5. Production EC2 (optional fallback)
+
+Cheapest reliable: **`t4g.micro`** (~$6/mo, 1 GB RAM) in `us-east-1`, Ubuntu, IAM role for S3 (no keys on instance). Copy `src/cron-run.sh` + `src/crontab.example` and adjust paths to `/home/ubuntu/projects/fftiers`.
 
 Stop instance in offseason to save ~60% annual cost.
 
 ## Git hygiene
 
-**Never commit:** `src/api_key.py`, `dat/`, `out/`, `~/.aws/credentials`
+**Never commit:** `src/api_key.py`, `dat/`, `out/`, `logs/`, `~/.aws/credentials`
 
 **Safe to commit:** `src/config.R`, `src/*.R`, `src/*.py`, `src/fftiers-workbench-bucket-policy.json`
 

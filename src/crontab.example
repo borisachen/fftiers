@@ -1,0 +1,9 @@
+# Install: crontab src/crontab.example
+# Adjust repo path below if not on Workbench at /root/dev/fftiers
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=boris.chen@gmail.com
+TZ=America/Los_Angeles
+
+0 6 * * * flock -n /tmp/fftiers-cron.lock /root/dev/fftiers/src/cron-run.sh >> /root/dev/fftiers/logs/cron.log 2>&1
