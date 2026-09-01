@@ -1,9 +1,16 @@
 # Install: crontab src/crontab.example
 # Adjust repo path below if not on Workbench at /root/dev/fftiers
+#
+# NOTE: this system's cron daemon schedules in system-local time (UTC)
+# and does NOT honor the TZ= line below for scheduling (only as env for
+# the job). So instead of a single "0 6 * * *" UTC-based entry -- which
+# would drift relative to Pacific time across DST changes -- this runs
+# every 5 minutes, and cron-run.sh itself checks Pacific wall-clock time
+# and only actually executes once, at the 6:00 AM Pacific slot each day.
 
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 MAILTO=boris.chen@gmail.com
 TZ=America/Los_Angeles
 
-0 6 * * * flock -n /tmp/fftiers-cron.lock /root/dev/fftiers/src/cron-run.sh >> /root/dev/fftiers/logs/cron.log 2>&1
+*/5 * * * * flock -n /tmp/fftiers-cron.lock /root/dev/fftiers/src/cron-run.sh >> /root/dev/fftiers/logs/cron.log 2>&1

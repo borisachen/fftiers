@@ -8,6 +8,8 @@ export PATH="/apps/default-python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/
 
 MAIL_TO="boris.chen@gmail.com"
 LOG_FILE="${REPO_ROOT}/logs/cron.log"
+LAST_RUN_MARKER="${REPO_ROOT}/logs/.last_run_date"
+TARGET_HOUR="06"
 FORCE=false
 
 for arg in "$@"; do
@@ -79,12 +81,29 @@ phase_label() {
 	fi
 }
 
+# The cron daemon on this box schedules in system-local time (UTC), and
+# ignores the TZ= line in the crontab for scheduling purposes (it only
+# sets the job's environment). To fire reliably at 6:00 AM Pacific across
+# DST changes, the crontab triggers this script every 5 minutes, and the
+# gating below decides -- using Pacific wall-clock time -- whether this
+# is actually the 6am slot, running at most once per calendar day.
 if [[ "$FORCE" != true ]]; then
 	if ! should_run_today; then
 		echo "$(date '+%Y-%m-%d %H:%M:%S %Z') skip ($(phase_label), dow=$(date +%u))"
 		exit 0
 	fi
+
+	current_hour=$(date +%H)
+	if [[ "$current_hour" != "$TARGET_HOUR" ]]; then
+		exit 0
+	fi
+
+	today=$(date +%F)
+	if [[ -f "$LAST_RUN_MARKER" && "$(cat "$LAST_RUN_MARKER")" == "$today" ]]; then
+		exit 0
+	fi
 fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S %Z') start ($(phase_label), force=$FORCE)"
+date +%F > "$LAST_RUN_MARKER"
 exec python3 "${REPO_ROOT}/src/master.py"
